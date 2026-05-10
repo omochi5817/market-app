@@ -509,6 +509,12 @@ JSONのみ返してください。`;
     setStep('step2', 'active');
 
     const result = await response.json();
+    if (!response.ok || result.error) {
+      throw new Error('APIエラー: ' + JSON.stringify(result.error || result));
+    }
+    if (!result.content || !result.content[0]) {
+      throw new Error('レスポンス異常: ' + JSON.stringify(result));
+    }
     const text = result.content[0].text;
     const json = text.replace(/```json|```/g, '').trim();
     extractedData = JSON.parse(json);
