@@ -158,7 +158,6 @@
     color: #000;
   }
   .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-analyze:active:not(:disabled) { transform: scale(0.98); }
 
   /* PROGRESS */
   .progress {
@@ -238,7 +237,6 @@
     color: #fff;
   }
   .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-submit:active:not(:disabled) { transform: scale(0.98); }
 
   /* SUCCESS */
   .success-msg {
@@ -420,116 +418,78 @@ function handleFile(e) {
     document.getElementById('uploadArea').classList.add('has-image');
     document.getElementById('analyzeBtn').disabled = false;
 
-    // リセット
-    document.getElementById('resultPanel').classList.remove('show');
-    document.getElementById('successMsg').classList.remove('show');
-    document.getElementById('submitBtn').style.display = 'none';
-    document.getElementById('resetBtn').style.display = 'none';
-    extractedData = null;
+    resetStatus();
   };
   reader.readAsDataURL(file);
+}
+
+function resetStatus() {
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('successMsg').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('progressPanel').classList.remove('show');
+  extractedData = null;
+  ['step1','step2','step3'].forEach(s => {
+    document.getElementById(s).className = 'progress-step';
+    document.getElementById(s).querySelector('.step-icon').textContent = s === 'step1' ? '🔍' : s === 'step2' ? '📋' : '📤';
+  });
 }
 
 function setStep(stepId, state) {
   const el = document.getElementById(stepId);
   el.className = 'progress-step ' + state;
-  if (state === 'active') {
-    el.querySelector('.step-icon').textContent = '⏳';
-  } else if (state === 'done') {
-    el.querySelector('.step-icon').textContent = '✅';
-  } else if (state === 'error') {
-    el.querySelector('.step-icon').textContent = '❌';
-  }
+  const icon = el.querySelector('.step-icon');
+  if (state === 'active') icon.textContent = '⏳';
+  else if (state === 'done') icon.textContent = '✅';
+  else if (state === 'error') icon.textContent = '❌';
 }
 
 async function analyze() {
   const geminiKey = localStorage.getItem('nj_gemini_key');
   const claudeKey = localStorage.getItem('nj_claude_key');
   const apiKey = currentEngine === 'gemini' ? geminiKey : claudeKey;
-  if (!apiKey) { alert('設定から' + (currentEngine === 'gemini' ? 'Gemini' : 'Claude') + ' APIキーを入力してください'); return; }
+  
+  if (!apiKey) { alert('設定から APIキーを入力してください'); return; }
   if (!imageBase64) { alert('画像を選択してください'); return; }
 
   document.getElementById('analyzeBtn').disabled = true;
   document.getElementById('analyzeBtnText').innerHTML = '<span class="spinner"></span> 解析中...';
   document.getElementById('progressPanel').classList.add('show');
-  document.getElementById('resultPanel').classList.remove('show');
-  document.getElementById('submitBtn').style.display = 'none';
-
+  
   setStep('step1', 'active');
-  setStep('step2', '');
-  setStep('step3', '');
 
   const prompt = `この相場表画像から以下の数値をJSONで抽出してください。
-存在しない項目はnullにしてください。数値はカンマなしの整数で返してください。
+必ず純粋なJSONオブジェクトのみを返し、解説や挨拶は含めないでください。存在しない項目はnullにしてください。数値はカンマなしの整数で返してください。
 
 {
   "date": "M/D形式の日付（例: 5/8）",
-  "gold_spot": 金スポット円/g,
-  "k24": K24スクラップ,
-  "k23": K23,
-  "k22": K22,
-  "k216": K21.6,
-  "k20": K20,
-  "k18": K18,
-  "k14": K14,
-  "k10": K10,
-  "k9": K9,
-  "k8": K8,
-  "k5": K5,
-  "kiba": 金歯,
-  "pt_ig": Pt地金またはPt1000(IG),
-  "pt1000": Pt1000スクラップ,
-  "pt950": Pt950,
-  "pt900": Pt900,
-  "pt850": Pt850,
-  "sv_ig": 銀地金またはSv1000(IG),
-  "sv1000": Sv1000スクラップ,
-  "sv925": Sv925,
-  "sv": SV(素材銀),
-  "c950_19": Pt950/K18 Kメイン1:9,
-  "c950_37": Pt950/K18 Kメイン3:7,
-  "c950_55": Pt950/K18 ハーフ5:5,
-  "c950_73": Pt950/K18 Ptメイン7:3,
-  "c950_91": Pt950/K18 Ptメイン9:1,
-  "c900_19": Pt900/K18 Kメイン1:9,
-  "c900_37": Pt900/K18 Kメイン3:7,
-  "c900_55": Pt900/K18 ハーフ5:5,
-  "c900_73": Pt900/K18 Ptメイン7:3,
-  "c900_91": Pt900/K18 Ptメイン9:1,
-  "c850_19": Pt850/K18 Kメイン1:9,
-  "c850_37": Pt850/K18 Kメイン3:7,
-  "c850_55": Pt850/K18 ハーフ5:5,
-  "c850_73": Pt850/K18 Ptメイン7:3,
-  "c850_91": Pt850/K18 Ptメイン9:1,
-  "sv_k18": SV/K18コンビ,
-  "sv_k14": SV/K14コンビ,
-  "sv_k10": SV/K10コンビ,
-  "pd": Pd(パラジウム)
-}
-
-JSONのみ返してください。`;
+  "gold_spot": 金スポット,
+  "k24": K24, "k23": K23, "k22": K22, "k216": K21.6, "k20": K20, "k18": K18, "k14": K14, "k10": K10, "k9": K9, "k8": K8, "k5": K5, "kiba": 金歯,
+  "pt_ig": Pt地金, "pt1000": Pt1000, "pt950": Pt950, "pt900": Pt900, "pt850": Pt850,
+  "sv_ig": 銀地金, "sv1000": Sv1000, "sv925": Sv925, "sv": SV, "pd": Pd,
+  "c950_19": "Pt950/K18 1:9", "c950_37": "Pt950/K18 3:7", "c950_55": "Pt950/K18 5:5", "c950_73": "Pt950/K18 7:3", "c950_91": "Pt950/K18 9:1",
+  "c900_19": "Pt900/K18 1:9", "c900_37": "Pt900/K18 3:7", "c900_55": "Pt900/K18 5:5", "c900_73": "Pt900/K18 7:3", "c900_91": "Pt900/K18 9:1",
+  "c850_19": "Pt850/K18 1:9", "c850_37": "Pt850/K18 3:7", "c850_55": "Pt850/K18 5:5", "c850_73": "Pt850/K18 7:3", "c850_91": "Pt850/K18 9:1",
+  "sv_k18": "SV/K18コンビ", "sv_k14": "SV/K14コンビ", "sv_k10": "SV/K10コンビ"
+}`;
 
   try {
-    let response, result, text;
+    let text;
     if (currentEngine === 'gemini') {
-      response = await fetch(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [
-              { inline_data: { mime_type: imageMediaType, data: imageBase64 } },
-              { text: prompt }
-            ]}]
-          })
-        }
-      );
-      result = await response.json();
-      if (!response.ok || result.error) throw new Error('Gemini APIエラー: ' + JSON.stringify(result.error || result));
-      text = result.candidates[0].content.parts[0].text;
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: imageMediaType, data: imageBase64 } }] }],
+          generationConfig: { response_mime_type: "application/json" }
+        })
+      });
+      const res = await resp.json();
+      if (!resp.ok) throw new Error(res.error?.message || 'Gemini API Error');
+      text = res.candidates[0].content.parts[0].text;
     } else {
-      response = await fetch('https://api.anthropic.com/v1/messages', {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -538,110 +498,45 @@ JSONのみ返してください。`;
           'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-3-5-sonnet-20240620',
           max_tokens: 1000,
-          messages: [{ role: 'user', content: [
-            { type: 'image', source: { type: 'base64', media_type: imageMediaType, data: imageBase64 } },
-            { type: 'text', text: prompt }
-          ]}]
+          messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: imageMediaType, data: imageBase64 } }, { type: 'text', text: prompt }] }]
         })
       });
-      result = await response.json();
-      if (!response.ok || result.error) throw new Error('Claude APIエラー: ' + JSON.stringify(result.error || result));
-      text = result.content[0].text;
+      const res = await resp.json();
+      if (!resp.ok) throw new Error(res.error?.message || 'Claude API Error');
+      text = res.content[0].text;
     }
 
     setStep('step1', 'done');
     setStep('step2', 'active');
 
-    const json = text.replace(/```json|```/g, '').trim();
-    extractedData = JSON.parse(json);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('JSONの抽出に失敗しました');
+    extractedData = JSON.parse(jsonMatch[0]);
 
     setStep('step2', 'done');
-
-    // 結果表示
     showResult(extractedData);
 
     document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('analyzeBtnText').innerHTML = '📊 再読み取り';
+    document.getElementById('analyzeBtnText').textContent = '📊 再読み取り';
 
   } catch (err) {
     setStep('step1', 'error');
+    setStep('step2', 'error');
     alert('エラー: ' + err.message);
     document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('analyzeBtnText').innerHTML = '📊 画像を読み取る';
+    document.getElementById('analyzeBtnText').textContent = '📊 画像を読み取る';
   }
 }
 
 function showResult(data) {
   document.getElementById('resultDate').textContent = data.date || '日付不明';
-
   const sections = [
-    {
-      label: '金スクラップ',
-      cls: 'gold',
-      items: [
-        ['金スポット', data.gold_spot],
-        ['K24', data.k24],
-        ['K23', data.k23],
-        ['K22', data.k22],
-        ['K21.6', data.k216],
-        ['K20', data.k20],
-        ['K18', data.k18],
-        ['K14', data.k14],
-        ['K10', data.k10],
-        ['K9', data.k9],
-        ['K8', data.k8],
-        ['K5', data.k5],
-        ['金歯', data.kiba],
-      ]
-    },
-    {
-      label: 'Ptスクラップ',
-      cls: 'platinum',
-      items: [
-        ['Pt1000(IG)', data.pt_ig],
-        ['Pt1000(S)', data.pt1000],
-        ['Pt950', data.pt950],
-        ['Pt900', data.pt900],
-        ['Pt850', data.pt850],
-      ]
-    },
-    {
-      label: '銀・Pd',
-      cls: 'silver',
-      items: [
-        ['Sv1000(IG)', data.sv_ig],
-        ['Sv1000(S)', data.sv1000],
-        ['Sv925', data.sv925],
-        ['SV', data.sv],
-        ['Pd', data.pd],
-      ]
-    },
-    {
-      label: 'コンビ・その他',
-      cls: '',
-      items: [
-        ['950/K18 1:9', data.c950_19],
-        ['950/K18 3:7', data.c950_37],
-        ['950/K18 5:5', data.c950_55],
-        ['950/K18 7:3', data.c950_73],
-        ['950/K18 9:1', data.c950_91],
-        ['900/K18 1:9', data.c900_19],
-        ['900/K18 3:7', data.c900_37],
-        ['900/K18 5:5', data.c900_55],
-        ['900/K18 7:3', data.c900_73],
-        ['900/K18 9:1', data.c900_91],
-        ['850/K18 1:9', data.c850_19],
-        ['850/K18 3:7', data.c850_37],
-        ['850/K18 5:5', data.c850_55],
-        ['850/K18 7:3', data.c850_73],
-        ['850/K18 9:1', data.c850_91],
-        ['SV/K18', data.sv_k18],
-        ['SV/K14', data.sv_k14],
-        ['SV/K10', data.sv_k10],
-      ]
-    }
+    { label: '金スクラップ', cls: 'gold', items: [['金スポット', data.gold_spot], ['K24', data.k24], ['K23', data.k23], ['K22', data.k22], ['K21.6', data.k216], ['K20', data.k20], ['K18', data.k18], ['K14', data.k14], ['K10', data.k10], ['K9', data.k9], ['K8', data.k8], ['K5', data.k5], ['金歯', data.kiba]] },
+    { label: 'Ptスクラップ', cls: 'platinum', items: [['Pt1000(IG)', data.pt_ig], ['Pt1000(S)', data.pt1000], ['Pt950', data.pt950], ['Pt900', data.pt900], ['Pt850', data.pt850]] },
+    { label: '銀・Pd', cls: 'silver', items: [['Sv1000(IG)', data.sv_ig], ['Sv1000(S)', data.sv1000], ['Sv925', data.sv925], ['SV', data.sv], ['Pd', data.pd]] },
+    { label: 'コンビ・他', cls: '', items: [['950/K18 1:9', data.c950_19],['950/K18 3:7', data.c950_37],['950/K18 5:5', data.c950_55],['950/K18 7:3', data.c950_73],['950/K18 9:1', data.c950_91],['900/K18 1:9', data.c900_19],['900/K18 3:7', data.c900_37],['900/K18 5:5', data.c900_55],['900/K18 7:3', data.c900_73],['900/K18 9:1', data.c900_91],['850/K18 1:9', data.c850_19],['850/K18 3:7', data.c850_37],['850/K18 5:5', data.c850_55],['850/K18 7:3', data.c850_73],['850/K18 9:1', data.c850_91],['SV/K18', data.sv_k18],['SV/K14', data.sv_k14],['SV/K10', data.sv_k10]] }
   ];
 
   let html = '';
@@ -650,10 +545,7 @@ function showResult(data) {
     if (!visible.length) return;
     html += `<div class="result-section">${sec.label}</div>`;
     visible.forEach(([label, val]) => {
-      html += `<div class="result-row">
-        <span class="result-label">${label}</span>
-        <span class="result-value ${sec.cls}">${val ? val.toLocaleString() + '円' : '-'}</span>
-      </div>`;
+      html += `<div class="result-row"><span class="result-label">${label}</span><span class="result-value ${sec.cls}">${typeof val === 'number' ? val.toLocaleString() + '円' : val}</span></div>`;
     });
   });
 
@@ -665,42 +557,26 @@ function showResult(data) {
 
 async function submitToSheet() {
   const gasUrl = localStorage.getItem('nj_gas_url');
-  if (!gasUrl) { alert('設定からGAS URLを入力してください'); return; }
-  if (!extractedData) return;
-
+  if (!gasUrl) { alert('GAS URLを設定してください'); return; }
+  
   document.getElementById('submitBtn').disabled = true;
   setStep('step3', 'active');
 
-  const d = extractedData;
-  const mapping = {
-    date: d.date,
-    gold_spot: d.gold_spot, k24: d.k24, k23: d.k23, k22: d.k22,
-    k216: d.k216, k20: d.k20, k18: d.k18, k14: d.k14, k10: d.k10,
-    k9: d.k9, k8: d.k8, k5: d.k5, kiba: d.kiba,
-    pt_ig: d.pt_ig, pt1000: d.pt1000, pt950: d.pt950, pt900: d.pt900, pt850: d.pt850,
-    sv_ig: d.sv_ig, sv1000: d.sv1000, sv925: d.sv925, sv: d.sv, pd: d.pd,
-    c950_19: d.c950_19, c950_37: d.c950_37, c950_55: d.c950_55, c950_73: d.c950_73, c950_91: d.c950_91,
-    c900_19: d.c900_19, c900_37: d.c900_37, c900_55: d.c900_55, c900_73: d.c900_73, c900_91: d.c900_91,
-    c850_19: d.c850_19, c850_37: d.c850_37, c850_55: d.c850_55, c850_73: d.c850_73, c850_91: d.c850_91,
-    sv_k18: d.sv_k18, sv_k14: d.sv_k14, sv_k10: d.sv_k10,
-  };
-
-  const params = Object.entries(mapping)
-    .filter(([, v]) => v != null)
-    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
-    .join('&');
-
-  const url = gasUrl + '?sheet=honbu&' + params;
+  const params = new URLSearchParams();
+  params.append('sheet', 'honbu');
+  for (let key in extractedData) {
+    if (extractedData[key] !== null) params.append(key, extractedData[key]);
+  }
 
   try {
-    await fetch(url, { mode: 'no-cors' });
+    await fetch(`${gasUrl}?${params.toString()}`, { mode: 'no-cors' });
     setStep('step3', 'done');
     document.getElementById('successTime').textContent = new Date().toLocaleString('ja-JP');
     document.getElementById('successMsg').classList.add('show');
     document.getElementById('submitBtn').style.display = 'none';
   } catch (err) {
     setStep('step3', 'error');
-    alert('書き込みエラー: ' + err.message);
+    alert('書き込み失敗: ' + err.message);
     document.getElementById('submitBtn').disabled = false;
   }
 }
@@ -711,18 +587,7 @@ function reset() {
   document.getElementById('uploadContent').style.display = 'block';
   document.getElementById('uploadArea').classList.remove('has-image');
   document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('analyzeBtnText').innerHTML = '📊 画像を読み取る';
-  document.getElementById('progressPanel').classList.remove('show');
-  document.getElementById('resultPanel').classList.remove('show');
-  document.getElementById('successMsg').classList.remove('show');
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('resetBtn').style.display = 'none';
-  extractedData = null;
-  imageBase64 = null;
-  ['step1','step2','step3'].forEach(s => {
-    const el = document.getElementById(s);
-    el.className = 'progress-step';
-  });
+  resetStatus();
 }
 </script>
 </body>
