@@ -360,6 +360,7 @@
 <script>
 let extractedData = null;
 let imageBase64 = null;
+let imageMediaType = 'image/jpeg';
 
 // 設定の読み込み
 window.addEventListener('load', () => {
@@ -385,7 +386,8 @@ function handleFile(e) {
   const reader = new FileReader();
   reader.onload = (ev) => {
     const dataUrl = ev.target.result;
-    imageBase64 = dataUrl.split(',')[1];
+    imageBase64 = dataUrl.split(",")[1];
+    imageMediaType = file.type || "image/jpeg";
 
     const img = document.getElementById('previewImg');
     img.src = dataUrl;
@@ -496,7 +498,7 @@ JSONのみ返してください。`;
         messages: [{
           role: 'user',
           content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+            { type: 'image', source: { type: 'base64', media_type: imageMediaType, data: imageBase64 } },
             { type: 'text', text: prompt }
           ]
         }]
