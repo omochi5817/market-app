@@ -9,273 +9,46 @@
 <title>相場更新</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
-
   :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #242424;
-    --border: #2e2e2e;
-    --gold: #c9a84c;
-    --gold-light: #e8c97a;
-    --platinum: #a8b8c8;
-    --silver: #8a9aaa;
-    --text: #f0f0f0;
-    --text-muted: #888;
-    --green: #4caf7d;
-    --red: #e05555;
-    --radius: 12px;
+    --bg: #0f0f0f; --surface: #1a1a1a; --surface2: #242424; --border: #2e2e2e;
+    --gold: #c9a84c; --gold-light: #e8c97a; --platinum: #a8b8c8; --silver: #8a9aaa;
+    --text: #f0f0f0; --text-muted: #888; --green: #4caf7d; --red: #e05555; --radius: 12px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans JP', sans-serif;
-    min-height: 100vh;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    overflow-x: hidden;
-  }
-
-  /* HEADER */
-  .header {
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: rgba(15,15,15,0.95);
-    backdrop-filter: blur(10px);
-    z-index: 100;
-  }
-  .header-title {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; min-height: 100vh; padding: env(safe-area-inset-top) 20px; }
+  .header { padding: 20px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); z-index: 100; }
+  .header-title { font-size: 18px; font-weight: 700; }
   .header-title span { color: var(--gold); }
-  .settings-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-muted);
-    padding: 6px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-  }
-
-  /* MAIN */
-  .main { padding: 20px; max-width: 480px; margin: 0 auto; }
-
-  /* SETTINGS PANEL */
-  .settings-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 20px;
-    display: none;
-  }
+  .settings-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  .main { max-width: 480px; margin: 20px auto; }
+  .settings-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; display: none; }
   .settings-panel.open { display: block; }
-  .settings-panel label {
-    display: block;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .settings-panel input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 10px 12px;
-    font-size: 13px;
-    font-family: 'DM Mono', monospace;
-    margin-bottom: 12px;
-    outline: none;
-  }
-  .settings-panel input:focus { border-color: var(--gold); }
-  .save-btn {
-    background: var(--gold);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  /* UPLOAD AREA */
-  .upload-area {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .upload-area:active { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .settings-panel label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+  .settings-panel input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 12px; font-size: 13px; font-family: 'DM Mono', monospace; margin-bottom: 12px; outline: none; }
+  .save-btn { background: var(--gold); color: #000; border: none; border-radius: 8px; padding: 10px; font-weight: 700; width: 100%; cursor: pointer; }
+  .upload-area { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px 20px; text-align: center; cursor: pointer; margin-bottom: 20px; position: relative; }
   .upload-area.has-image { border-style: solid; border-color: var(--gold); padding: 0; }
-  .upload-area input[type=file] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  }
-  .upload-icon { font-size: 40px; margin-bottom: 12px; }
-  .upload-text { font-size: 15px; color: var(--text-muted); }
-  .upload-text strong { color: var(--text); display: block; margin-bottom: 4px; }
+  .upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .preview-img { width: 100%; border-radius: calc(var(--radius) - 2px); display: block; }
-
-  /* ACTION BTN */
-  .action-btn {
-    width: 100%;
-    padding: 16px;
-    border-radius: var(--radius);
-    border: none;
-    font-size: 16px;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .btn-analyze {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: #000;
-  }
-  .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* PROGRESS */
-  .progress {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 20px;
-    display: none;
-  }
+  .action-btn { width: 100%; padding: 16px; border-radius: var(--radius); border: none; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-analyze { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #000; }
+  .btn-analyze:disabled { opacity: 0.4; }
+  .progress { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; display: none; }
   .progress.show { display: block; }
-  .progress-step {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-  }
-  .progress-step:last-child { border-bottom: none; }
-  .progress-step.active { color: var(--gold); }
+  .progress-step { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 14px; color: var(--text-muted); border-bottom: 1px solid var(--border); }
   .progress-step.done { color: var(--green); }
-  .progress-step.error { color: var(--red); }
-  .step-icon { font-size: 16px; width: 20px; text-align: center; }
-
-  /* RESULT */
-  .result-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-    overflow: hidden;
-    display: none;
-  }
+  .progress-step.active { color: var(--gold); }
+  .result-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; display: none; overflow: hidden; }
   .result-panel.show { display: block; }
-  .result-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .result-date { color: var(--gold); font-family: 'DM Mono', monospace; }
-  .result-section {
-    padding: 12px 16px 4px;
-    font-size: 11px;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .result-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(46,46,46,0.5);
-    font-size: 14px;
-  }
-  .result-row:last-child { border-bottom: none; }
-  .result-label { color: var(--text-muted); }
-  .result-value { font-family: 'DM Mono', monospace; color: var(--text); font-weight: 500; }
-  .result-value.gold { color: var(--gold); }
-  .result-value.platinum { color: var(--platinum); }
-  .result-value.silver { color: var(--silver); }
-
-  /* SUBMIT BTN */
-  .btn-submit {
-    background: var(--green);
-    color: #fff;
-  }
-  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* SUCCESS */
-  .success-msg {
-    background: rgba(76,175,125,0.1);
-    border: 1px solid var(--green);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    display: none;
-    margin-bottom: 20px;
-  }
+  .result-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; display: flex; justify-content: space-between; }
+  .result-section { padding: 10px 16px; font-size: 11px; background: var(--surface2); color: var(--text-muted); }
+  .result-row { display: flex; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid rgba(46,46,46,0.5); font-size: 14px; }
+  .result-value { font-family: 'DM Mono', monospace; }
+  .btn-submit { background: var(--green); color: #fff; }
+  .success-msg { background: rgba(76,175,125,0.1); border: 1px solid var(--green); border-radius: var(--radius); padding: 20px; text-align: center; display: none; margin-bottom: 20px; }
   .success-msg.show { display: block; }
-  .success-icon { font-size: 40px; margin-bottom: 8px; }
-  .success-text { color: var(--green); font-weight: 700; font-size: 16px; }
-  .success-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
-
-  /* SPINNER */
-  .spinner {
-    width: 18px; height: 18px;
-    border: 2px solid rgba(0,0,0,0.3);
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-  }
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .reset-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-muted);
-    padding: 12px;
-    font-size: 14px;
-    font-family: inherit;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom: 20px;
-  }
 </style>
 </head>
 <body>
@@ -286,308 +59,165 @@
 </div>
 
 <div class="main">
-
-  <!-- SETTINGS -->
   <div class="settings-panel" id="settingsPanel">
     <label>AI エンジン</label>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <button id="btnGemini" onclick="selectEngine('gemini')" style="flex:1;padding:8px;border-radius:8px;border:2px solid var(--gold);background:var(--gold);color:#000;font-weight:700;font-family:inherit;cursor:pointer;">Gemini（無料）</button>
-      <button id="btnClaude" onclick="selectEngine('claude')" style="flex:1;padding:8px;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--text-muted);font-weight:700;font-family:inherit;cursor:pointer;">Claude（有料）</button>
+      <button id="btnGemini" onclick="selectEngine('gemini')" style="flex:1;padding:8px;border-radius:8px;border:2px solid var(--gold);background:var(--gold);font-weight:700;cursor:pointer;">Gemini</button>
+      <button id="btnClaude" onclick="selectEngine('claude')" style="flex:1;padding:8px;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;">Claude</button>
     </div>
     <label>Gemini API Key</label>
-    <input type="password" id="geminiKey" placeholder="AIza..." />
+    <input type="password" id="geminiKey" placeholder="AIza...">
     <label>Claude API Key</label>
-    <input type="password" id="claudeKey" placeholder="sk-ant-..." />
-    <label>GAS デプロイURL</label>
-    <input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+    <input type="password" id="claudeKey" placeholder="sk-ant-...">
+    <label>GAS URL</label>
+    <input type="text" id="gasUrl" placeholder="https://script.google.com/...">
     <button class="save-btn" onclick="saveSettings()">保存</button>
   </div>
 
-  <!-- UPLOAD -->
   <div class="upload-area" id="uploadArea">
-    <input type="file" accept="image/*" id="fileInput" onchange="handleFile(event)">
-    <div id="uploadContent">
-      <div class="upload-icon">📷</div>
-      <div class="upload-text">
-        <strong>相場表画像を選択</strong>
-        カメラロールまたは撮影
-      </div>
-    </div>
+    <input type="file" accept="image/*" onchange="handleFile(event)">
+    <div id="uploadContent">📷 <strong>画像を選択</strong></div>
     <img id="previewImg" class="preview-img" style="display:none">
   </div>
 
-  <!-- ANALYZE BTN -->
-  <button class="action-btn btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
-    <span id="analyzeBtnText">📊 画像を読み取る</span>
-  </button>
+  <button class="action-btn btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>📊 画像を読み取る</button>
 
-  <!-- PROGRESS -->
   <div class="progress" id="progressPanel">
-    <div class="progress-step" id="step1">
-      <span class="step-icon">🔍</span> 画像をAIで解析中...
-    </div>
-    <div class="progress-step" id="step2">
-      <span class="step-icon">📋</span> 数値を抽出中...
-    </div>
-    <div class="progress-step" id="step3">
-      <span class="step-icon">📤</span> シートに書き込み中...
-    </div>
+    <div class="progress-step" id="step1">🔍 AI解析中...</div>
+    <div class="progress-step" id="step2">📋 数値抽出中...</div>
+    <div class="progress-step" id="step3">📤 シート書込中...</div>
   </div>
 
-  <!-- RESULT -->
   <div class="result-panel" id="resultPanel">
-    <div class="result-header">
-      取得データ確認
-      <span class="result-date" id="resultDate"></span>
-    </div>
+    <div class="result-header">取得データ確認 <span id="resultDate" style="color:var(--gold)"></span></div>
     <div id="resultBody"></div>
   </div>
 
-  <!-- SUBMIT -->
-  <button class="action-btn btn-submit" id="submitBtn" onclick="submitToSheet()" style="display:none">
-    ✅ シートに書き込む
-  </button>
-
-  <!-- SUCCESS -->
-  <div class="success-msg" id="successMsg">
-    <div class="success-icon">✅</div>
-    <div class="success-text">更新完了！</div>
-    <div class="success-sub" id="successTime"></div>
-  </div>
-
-  <!-- RESET -->
-  <button class="reset-btn" id="resetBtn" onclick="reset()" style="display:none">
-    🔄 別の画像を読み込む
-  </button>
-
+  <button class="action-btn btn-submit" id="submitBtn" onclick="submitToSheet()" style="display:none">✅ シートに書き込む</button>
+  <div class="success-msg" id="successMsg">✅ 更新完了</div>
+  <button class="action-btn" id="resetBtn" onclick="location.reload()" style="display:none; background:var(--surface2); color:var(--text)">🔄 別の画像</button>
 </div>
 
 <script>
 let extractedData = null;
 let imageBase64 = null;
 let imageMediaType = 'image/jpeg';
-let currentEngine = 'gemini';
+let currentEngine = localStorage.getItem('nj_engine') || 'gemini';
 
-window.addEventListener('load', () => {
+window.onload = () => {
   document.getElementById('geminiKey').value = localStorage.getItem('nj_gemini_key') || '';
   document.getElementById('claudeKey').value = localStorage.getItem('nj_claude_key') || '';
   document.getElementById('gasUrl').value = localStorage.getItem('nj_gas_url') || '';
-  selectEngine(localStorage.getItem('nj_engine') || 'gemini');
-});
+  selectEngine(currentEngine);
+};
 
 function selectEngine(engine) {
   currentEngine = engine;
   localStorage.setItem('nj_engine', engine);
-  const btnG = document.getElementById('btnGemini');
-  const btnC = document.getElementById('btnClaude');
-  if (engine === 'gemini') {
-    btnG.style.background = 'var(--gold)'; btnG.style.color = '#000'; btnG.style.borderColor = 'var(--gold)';
-    btnC.style.background = 'transparent'; btnC.style.color = 'var(--text-muted)'; btnC.style.borderColor = 'var(--border)';
-  } else {
-    btnC.style.background = 'var(--gold)'; btnC.style.color = '#000'; btnC.style.borderColor = 'var(--gold)';
-    btnG.style.background = 'transparent'; btnG.style.color = 'var(--text-muted)'; btnG.style.borderColor = 'var(--border)';
-  }
+  const isGem = engine === 'gemini';
+  document.getElementById('btnGemini').style.cssText = isGem ? "background:var(--gold);color:#000;border-color:var(--gold);" : "background:transparent;color:var(--text-muted);border-color:var(--border);";
+  document.getElementById('btnClaude').style.cssText = !isGem ? "background:var(--gold);color:#000;border-color:var(--gold);" : "background:transparent;color:var(--text-muted);border-color:var(--border);";
 }
 
-function toggleSettings() {
-  document.getElementById('settingsPanel').classList.toggle('open');
-}
+function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); }
 
 function saveSettings() {
   localStorage.setItem('nj_gemini_key', document.getElementById('geminiKey').value.trim());
   localStorage.setItem('nj_claude_key', document.getElementById('claudeKey').value.trim());
   localStorage.setItem('nj_gas_url', document.getElementById('gasUrl').value.trim());
-  document.getElementById('settingsPanel').classList.remove('open');
+  toggleSettings();
   alert('保存しました');
 }
 
 function handleFile(e) {
   const file = e.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
   reader.onload = (ev) => {
-    const dataUrl = ev.target.result;
-    imageBase64 = dataUrl.split(",")[1];
+    imageBase64 = ev.target.result.split(",")[1];
     imageMediaType = file.type || "image/jpeg";
-
-    const img = document.getElementById('previewImg');
-    img.src = dataUrl;
-    img.style.display = 'block';
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('previewImg').style.display = 'block';
     document.getElementById('uploadContent').style.display = 'none';
     document.getElementById('uploadArea').classList.add('has-image');
     document.getElementById('analyzeBtn').disabled = false;
-
-    resetStatus();
   };
   reader.readAsDataURL(file);
 }
 
-function resetStatus() {
-  document.getElementById('resultPanel').classList.remove('show');
-  document.getElementById('successMsg').classList.remove('show');
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('resetBtn').style.display = 'none';
-  document.getElementById('progressPanel').classList.remove('show');
-  extractedData = null;
-  ['step1','step2','step3'].forEach(s => {
-    document.getElementById(s).className = 'progress-step';
-    document.getElementById(s).querySelector('.step-icon').textContent = s === 'step1' ? '🔍' : s === 'step2' ? '📋' : '📤';
-  });
-}
-
-function setStep(stepId, state) {
-  const el = document.getElementById(stepId);
-  el.className = 'progress-step ' + state;
-  const icon = el.querySelector('.step-icon');
-  if (state === 'active') icon.textContent = '⏳';
-  else if (state === 'done') icon.textContent = '✅';
-  else if (state === 'error') icon.textContent = '❌';
-}
-
 async function analyze() {
-  const geminiKey = localStorage.getItem('nj_gemini_key');
-  const claudeKey = localStorage.getItem('nj_claude_key');
-  const apiKey = currentEngine === 'gemini' ? geminiKey : claudeKey;
-  
-  if (!apiKey) { alert('設定から APIキーを入力してください'); return; }
-  if (!imageBase64) { alert('画像を選択してください'); return; }
+  const apiKey = localStorage.getItem(currentEngine === 'gemini' ? 'nj_gemini_key' : 'nj_claude_key');
+  if (!apiKey) return alert('APIキーを設定してください');
 
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('analyzeBtnText').innerHTML = '<span class="spinner"></span> 解析中...';
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 解析中...';
   document.getElementById('progressPanel').classList.add('show');
   
-  setStep('step1', 'active');
-
-  const prompt = `この相場表画像から以下の数値をJSONで抽出してください。
-必ず純粋なJSONオブジェクトのみを返し、解説や挨拶は含めないでください。存在しない項目はnullにしてください。数値はカンマなしの整数で返してください。
-
-{
-  "date": "M/D形式の日付（例: 5/8）",
-  "gold_spot": 金スポット,
-  "k24": K24, "k23": K23, "k22": K22, "k216": K21.6, "k20": K20, "k18": K18, "k14": K14, "k10": K10, "k9": K9, "k8": K8, "k5": K5, "kiba": 金歯,
-  "pt_ig": Pt地金, "pt1000": Pt1000, "pt950": Pt950, "pt900": Pt900, "pt850": Pt850,
-  "sv_ig": 銀地金, "sv1000": Sv1000, "sv925": Sv925, "sv": SV, "pd": Pd,
-  "c950_19": "Pt950/K18 1:9", "c950_37": "Pt950/K18 3:7", "c950_55": "Pt950/K18 5:5", "c950_73": "Pt950/K18 7:3", "c950_91": "Pt950/K18 9:1",
-  "c900_19": "Pt900/K18 1:9", "c900_37": "Pt900/K18 3:7", "c900_55": "Pt900/K18 5:5", "c900_73": "Pt900/K18 7:3", "c900_91": "Pt900/K18 9:1",
-  "c850_19": "Pt850/K18 1:9", "c850_37": "Pt850/K18 3:7", "c850_55": "Pt850/K18 5:5", "c850_73": "Pt850/K18 7:3", "c850_91": "Pt850/K18 9:1",
-  "sv_k18": "SV/K18コンビ", "sv_k14": "SV/K14コンビ", "sv_k10": "SV/K10コンビ"
-}`;
+  const prompt = `相場表から数値をJSONで抽出。{ "date":"M/D", "gold_spot":数字, "k24":数字, "k18":数字, "pt1000":数字, "pt900":数字, "sv1000":数字, "pd":数字 } 等の形式。不明はnull。JSONのみ回答。`;
 
   try {
     let text;
     if (currentEngine === 'gemini') {
-      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: imageMediaType, data: imageBase64 } }] }],
-          generationConfig: { response_mime_type: "application/json" }
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: imageMediaType, data: imageBase64 } }] }] })
       });
-      const res = await resp.json();
-      if (!resp.ok) throw new Error(res.error?.message || 'Gemini API Error');
-      text = res.candidates[0].content.parts[0].text;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Gemini Error');
+      text = data.candidates[0].content.parts[0].text;
     } else {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      // Claudeのリクエストを「最初のコード」に合わせる
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
         body: JSON.stringify({
           model: 'claude-3-5-sonnet-20240620',
           max_tokens: 1000,
           messages: [{ role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: imageMediaType, data: imageBase64 } }, { type: 'text', text: prompt }] }]
         })
       });
-      const res = await resp.json();
-      if (!resp.ok) throw new Error(res.error?.message || 'Claude API Error');
-      text = res.content[0].text;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Claude Error');
+      text = data.content[0].text;
     }
 
-    setStep('step1', 'done');
-    setStep('step2', 'active');
-
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('JSONの抽出に失敗しました');
-    extractedData = JSON.parse(jsonMatch[0]);
-
-    setStep('step2', 'done');
+    extractedData = JSON.parse(text.match(/\{[\s\S]*\}/)[0]);
+    document.getElementById('step1').classList.add('done');
     showResult(extractedData);
-
-    document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('analyzeBtnText').textContent = '📊 再読み取り';
-
+    btn.innerHTML = '📊 再読み取り';
+    btn.disabled = false;
   } catch (err) {
-    setStep('step1', 'error');
-    setStep('step2', 'error');
     alert('エラー: ' + err.message);
-    document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('analyzeBtnText').textContent = '📊 画像を読み取る';
+    btn.disabled = false;
+    btn.innerHTML = '📊 画像を読み取る';
   }
 }
 
 function showResult(data) {
-  document.getElementById('resultDate').textContent = data.date || '日付不明';
-  const sections = [
-    { label: '金スクラップ', cls: 'gold', items: [['金スポット', data.gold_spot], ['K24', data.k24], ['K23', data.k23], ['K22', data.k22], ['K21.6', data.k216], ['K20', data.k20], ['K18', data.k18], ['K14', data.k14], ['K10', data.k10], ['K9', data.k9], ['K8', data.k8], ['K5', data.k5], ['金歯', data.kiba]] },
-    { label: 'Ptスクラップ', cls: 'platinum', items: [['Pt1000(IG)', data.pt_ig], ['Pt1000(S)', data.pt1000], ['Pt950', data.pt950], ['Pt900', data.pt900], ['Pt850', data.pt850]] },
-    { label: '銀・Pd', cls: 'silver', items: [['Sv1000(IG)', data.sv_ig], ['Sv1000(S)', data.sv1000], ['Sv925', data.sv925], ['SV', data.sv], ['Pd', data.pd]] },
-    { label: 'コンビ・他', cls: '', items: [['950/K18 1:9', data.c950_19],['950/K18 3:7', data.c950_37],['950/K18 5:5', data.c950_55],['950/K18 7:3', data.c950_73],['950/K18 9:1', data.c950_91],['900/K18 1:9', data.c900_19],['900/K18 3:7', data.c900_37],['900/K18 5:5', data.c900_55],['900/K18 7:3', data.c900_73],['900/K18 9:1', data.c900_91],['850/K18 1:9', data.c850_19],['850/K18 3:7', data.c850_37],['850/K18 5:5', data.c850_55],['850/K18 7:3', data.c850_73],['850/K18 9:1', data.c850_91],['SV/K18', data.sv_k18],['SV/K14', data.sv_k14],['SV/K10', data.sv_k10]] }
-  ];
-
+  document.getElementById('resultDate').textContent = data.date || '-';
   let html = '';
-  sections.forEach(sec => {
-    const visible = sec.items.filter(([, v]) => v != null);
-    if (!visible.length) return;
-    html += `<div class="result-section">${sec.label}</div>`;
-    visible.forEach(([label, val]) => {
-      html += `<div class="result-row"><span class="result-label">${label}</span><span class="result-value ${sec.cls}">${typeof val === 'number' ? val.toLocaleString() + '円' : val}</span></div>`;
-    });
-  });
-
+  for (let k in data) {
+    if(k==='date' || data[k]===null) continue;
+    html += `<div class="result-row"><span>${k}</span><span class="result-value">${data[k].toLocaleString()}円</span></div>`;
+  }
   document.getElementById('resultBody').innerHTML = html;
   document.getElementById('resultPanel').classList.add('show');
   document.getElementById('submitBtn').style.display = 'flex';
-  document.getElementById('resetBtn').style.display = 'block';
+  document.getElementById('resetBtn').style.display = 'flex';
 }
 
 async function submitToSheet() {
-  const gasUrl = localStorage.getItem('nj_gas_url');
-  if (!gasUrl) { alert('GAS URLを設定してください'); return; }
-  
+  const url = localStorage.getItem('nj_gas_url');
+  if(!url) return alert('GAS URLを設定してください');
   document.getElementById('submitBtn').disabled = true;
-  setStep('step3', 'active');
-
-  const params = new URLSearchParams();
-  params.append('sheet', 'honbu');
-  for (let key in extractedData) {
-    if (extractedData[key] !== null) params.append(key, extractedData[key]);
-  }
-
+  const params = new URLSearchParams(extractedData).toString();
   try {
-    await fetch(`${gasUrl}?${params.toString()}`, { mode: 'no-cors' });
-    setStep('step3', 'done');
-    document.getElementById('successTime').textContent = new Date().toLocaleString('ja-JP');
+    await fetch(`${url}?${params}`, { mode: 'no-cors' });
     document.getElementById('successMsg').classList.add('show');
     document.getElementById('submitBtn').style.display = 'none';
-  } catch (err) {
-    setStep('step3', 'error');
-    alert('書き込み失敗: ' + err.message);
-    document.getElementById('submitBtn').disabled = false;
-  }
-}
-
-function reset() {
-  document.getElementById('fileInput').value = '';
-  document.getElementById('previewImg').style.display = 'none';
-  document.getElementById('uploadContent').style.display = 'block';
-  document.getElementById('uploadArea').classList.remove('has-image');
-  document.getElementById('analyzeBtn').disabled = true;
-  resetStatus();
+  } catch(e) { alert('書込失敗'); document.getElementById('submitBtn').disabled = false; }
 }
 </script>
 </body>
