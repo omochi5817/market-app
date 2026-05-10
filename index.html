@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="相場更新">
+<title>相場更新</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #2e2e2e;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --platinum: #a8b8c8;
+    --silver: #8a9aaa;
+    --text: #f0f0f0;
+    --text-muted: #888;
+    --green: #4caf7d;
+    --red: #e05555;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: rgba(15,15,15,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .header-title span { color: var(--gold); }
+  .settings-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* MAIN */
+  .main { padding: 20px; max-width: 480px; margin: 0 auto; }
+
+  /* SETTINGS PANEL */
+  .settings-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .settings-panel.open { display: block; }
+  .settings-panel label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .settings-panel input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  .settings-panel input:focus { border-color: var(--gold); }
+  .save-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* UPLOAD AREA */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-area:active { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+  .upload-area.has-image { border-style: solid; border-color: var(--gold); padding: 0; }
+  .upload-area input[type=file] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-icon { font-size: 40px; margin-bottom: 12px; }
+  .upload-text { font-size: 15px; color: var(--text-muted); }
+  .upload-text strong { color: var(--text); display: block; margin-bottom: 4px; }
+  .preview-img { width: 100%; border-radius: calc(var(--radius) - 2px); display: block; }
+
+  /* ACTION BTN */
+  .action-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-analyze {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #000;
+  }
+  .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-analyze:active:not(:disabled) { transform: scale(0.98); }
+
+  /* PROGRESS */
+  .progress {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .progress.show { display: block; }
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .progress-step:last-child { border-bottom: none; }
+  .progress-step.active { color: var(--gold); }
+  .progress-step.done { color: var(--green); }
+  .progress-step.error { color: var(--red); }
+  .step-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* RESULT */
+  .result-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+    display: none;
+  }
+  .result-panel.show { display: block; }
+  .result-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-date { color: var(--gold); font-family: 'DM Mono', monospace; }
+  .result-section {
+    padding: 12px 16px 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(46,46,46,0.5);
+    font-size: 14px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-label { color: var(--text-muted); }
+  .result-value { font-family: 'DM Mono', monospace; color: var(--text); font-weight: 500; }
+  .result-value.gold { color: var(--gold); }
+  .result-value.platinum { color: var(--platinum); }
+  .result-value.silver { color: var(--silver); }
+
+  /* SUBMIT BTN */
+  .btn-submit {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-submit:active:not(:disabled) { transform: scale(0.98); }
+
+  /* SUCCESS */
+  .success-msg {
+    background: rgba(76,175,125,0.1);
+    border: 1px solid var(--green);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    display: none;
+    margin-bottom: 20px;
+  }
+  .success-msg.show { display: block; }
+  .success-icon { font-size: 40px; margin-bottom: 8px; }
+  .success-text { color: var(--green); font-weight: 700; font-size: 16px; }
+  .success-sub { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+  /* SPINNER */
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(0,0,0,0.3);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    padding: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title"><span>相場</span>更新アプリ</div>
+  <button class="settings-btn" onclick="toggleSettings()">⚙ 設定</button>
+</div>
+
+<div class="main">
+
+  <!-- SETTINGS -->
+  <div class="settings-panel" id="settingsPanel">
+    <label>Claude API Key</label>
+    <input type="password" id="apiKey" placeholder="sk-ant-..." />
+    <label>GAS デプロイURL</label>
+    <input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+    <button class="save-btn" onclick="saveSettings()">保存</button>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="upload-area" id="uploadArea">
+    <input type="file" accept="image/*" id="fileInput" onchange="handleFile(event)">
+    <div id="uploadContent">
+      <div class="upload-icon">📷</div>
+      <div class="upload-text">
+        <strong>相場表画像を選択</strong>
+        カメラロールまたは撮影
+      </div>
+    </div>
+    <img id="previewImg" class="preview-img" style="display:none">
+  </div>
+
+  <!-- ANALYZE BTN -->
+  <button class="action-btn btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
+    <span id="analyzeBtnText">📊 画像を読み取る</span>
+  </button>
+
+  <!-- PROGRESS -->
+  <div class="progress" id="progressPanel">
+    <div class="progress-step" id="step1">
+      <span class="step-icon">🔍</span> 画像をAIで解析中...
+    </div>
+    <div class="progress-step" id="step2">
+      <span class="step-icon">📋</span> 数値を抽出中...
+    </div>
+    <div class="progress-step" id="step3">
+      <span class="step-icon">📤</span> シートに書き込み中...
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-panel" id="resultPanel">
+    <div class="result-header">
+      取得データ確認
+      <span class="result-date" id="resultDate"></span>
+    </div>
+    <div id="resultBody"></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <button class="action-btn btn-submit" id="submitBtn" onclick="submitToSheet()" style="display:none">
+    ✅ シートに書き込む
+  </button>
+
+  <!-- SUCCESS -->
+  <div class="success-msg" id="successMsg">
+    <div class="success-icon">✅</div>
+    <div class="success-text">更新完了！</div>
+    <div class="success-sub" id="successTime"></div>
+  </div>
+
+  <!-- RESET -->
+  <button class="reset-btn" id="resetBtn" onclick="reset()" style="display:none">
+    🔄 別の画像を読み込む
+  </button>
+
+</div>
+
+<script>
+let extractedData = null;
+let imageBase64 = null;
+
+// 設定の読み込み
+window.addEventListener('load', () => {
+  document.getElementById('apiKey').value = localStorage.getItem('nj_api_key') || '';
+  document.getElementById('gasUrl').value = localStorage.getItem('nj_gas_url') || '';
+});
+
+function toggleSettings() {
+  document.getElementById('settingsPanel').classList.toggle('open');
+}
+
+function saveSettings() {
+  localStorage.setItem('nj_api_key', document.getElementById('apiKey').value.trim());
+  localStorage.setItem('nj_gas_url', document.getElementById('gasUrl').value.trim());
+  document.getElementById('settingsPanel').classList.remove('open');
+  alert('保存しました');
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const dataUrl = ev.target.result;
+    imageBase64 = dataUrl.split(',')[1];
+
+    const img = document.getElementById('previewImg');
+    img.src = dataUrl;
+    img.style.display = 'block';
+    document.getElementById('uploadContent').style.display = 'none';
+    document.getElementById('uploadArea').classList.add('has-image');
+    document.getElementById('analyzeBtn').disabled = false;
+
+    // リセット
+    document.getElementById('resultPanel').classList.remove('show');
+    document.getElementById('successMsg').classList.remove('show');
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('resetBtn').style.display = 'none';
+    extractedData = null;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setStep(stepId, state) {
+  const el = document.getElementById(stepId);
+  el.className = 'progress-step ' + state;
+  if (state === 'active') {
+    el.querySelector('.step-icon').textContent = '⏳';
+  } else if (state === 'done') {
+    el.querySelector('.step-icon').textContent = '✅';
+  } else if (state === 'error') {
+    el.querySelector('.step-icon').textContent = '❌';
+  }
+}
+
+async function analyze() {
+  const apiKey = localStorage.getItem('nj_api_key');
+  if (!apiKey) { alert('設定からAPIキーを入力してください'); return; }
+  if (!imageBase64) { alert('画像を選択してください'); return; }
+
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('analyzeBtnText').innerHTML = '<span class="spinner"></span> 解析中...';
+  document.getElementById('progressPanel').classList.add('show');
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'none';
+
+  setStep('step1', 'active');
+  setStep('step2', '');
+  setStep('step3', '');
+
+  const prompt = `この相場表画像から以下の数値をJSONで抽出してください。
+存在しない項目はnullにしてください。数値はカンマなしの整数で返してください。
+
+{
+  "date": "M/D形式の日付（例: 5/8）",
+  "gold_spot": 金スポット円/g,
+  "k24": K24スクラップ,
+  "k23": K23,
+  "k22": K22,
+  "k216": K21.6,
+  "k20": K20,
+  "k18": K18,
+  "k14": K14,
+  "k10": K10,
+  "k9": K9,
+  "k8": K8,
+  "k5": K5,
+  "kiba": 金歯,
+  "pt_ig": Pt地金またはPt1000(IG),
+  "pt1000": Pt1000スクラップ,
+  "pt950": Pt950,
+  "pt900": Pt900,
+  "pt850": Pt850,
+  "sv_ig": 銀地金またはSv1000(IG),
+  "sv1000": Sv1000スクラップ,
+  "sv925": Sv925,
+  "sv": SV(素材銀),
+  "c950_19": Pt950/K18 Kメイン1:9,
+  "c950_37": Pt950/K18 Kメイン3:7,
+  "c950_55": Pt950/K18 ハーフ5:5,
+  "c950_73": Pt950/K18 Ptメイン7:3,
+  "c950_91": Pt950/K18 Ptメイン9:1,
+  "c900_19": Pt900/K18 Kメイン1:9,
+  "c900_37": Pt900/K18 Kメイン3:7,
+  "c900_55": Pt900/K18 ハーフ5:5,
+  "c900_73": Pt900/K18 Ptメイン7:3,
+  "c900_91": Pt900/K18 Ptメイン9:1,
+  "c850_19": Pt850/K18 Kメイン1:9,
+  "c850_37": Pt850/K18 Kメイン3:7,
+  "c850_55": Pt850/K18 ハーフ5:5,
+  "c850_73": Pt850/K18 Ptメイン7:3,
+  "c850_91": Pt850/K18 Ptメイン9:1,
+  "sv_k18": SV/K18コンビ,
+  "sv_k14": SV/K14コンビ,
+  "sv_k10": SV/K10コンビ,
+  "pd": Pd(パラジウム)
+}
+
+JSONのみ返してください。`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5-20251101',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    setStep('step1', 'done');
+    setStep('step2', 'active');
+
+    const result = await response.json();
+    const text = result.content[0].text;
+    const json = text.replace(/```json|```/g, '').trim();
+    extractedData = JSON.parse(json);
+
+    setStep('step2', 'done');
+
+    // 結果表示
+    showResult(extractedData);
+
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('analyzeBtnText').innerHTML = '📊 再読み取り';
+
+  } catch (err) {
+    setStep('step1', 'error');
+    alert('エラー: ' + err.message);
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('analyzeBtnText').innerHTML = '📊 画像を読み取る';
+  }
+}
+
+function showResult(data) {
+  document.getElementById('resultDate').textContent = data.date || '日付不明';
+
+  const sections = [
+    {
+      label: '金スクラップ',
+      cls: 'gold',
+      items: [
+        ['金スポット', data.gold_spot],
+        ['K24', data.k24],
+        ['K23', data.k23],
+        ['K22', data.k22],
+        ['K21.6', data.k216],
+        ['K20', data.k20],
+        ['K18', data.k18],
+        ['K14', data.k14],
+        ['K10', data.k10],
+        ['K9', data.k9],
+        ['K8', data.k8],
+        ['K5', data.k5],
+        ['金歯', data.kiba],
+      ]
+    },
+    {
+      label: 'Ptスクラップ',
+      cls: 'platinum',
+      items: [
+        ['Pt1000(IG)', data.pt_ig],
+        ['Pt1000(S)', data.pt1000],
+        ['Pt950', data.pt950],
+        ['Pt900', data.pt900],
+        ['Pt850', data.pt850],
+      ]
+    },
+    {
+      label: '銀・Pd',
+      cls: 'silver',
+      items: [
+        ['Sv1000(IG)', data.sv_ig],
+        ['Sv1000(S)', data.sv1000],
+        ['Sv925', data.sv925],
+        ['SV', data.sv],
+        ['Pd', data.pd],
+      ]
+    },
+    {
+      label: 'コンビ・その他',
+      cls: '',
+      items: [
+        ['950/K18 1:9', data.c950_19],
+        ['950/K18 3:7', data.c950_37],
+        ['950/K18 5:5', data.c950_55],
+        ['950/K18 7:3', data.c950_73],
+        ['950/K18 9:1', data.c950_91],
+        ['900/K18 1:9', data.c900_19],
+        ['900/K18 3:7', data.c900_37],
+        ['900/K18 5:5', data.c900_55],
+        ['900/K18 7:3', data.c900_73],
+        ['900/K18 9:1', data.c900_91],
+        ['850/K18 1:9', data.c850_19],
+        ['850/K18 3:7', data.c850_37],
+        ['850/K18 5:5', data.c850_55],
+        ['850/K18 7:3', data.c850_73],
+        ['850/K18 9:1', data.c850_91],
+        ['SV/K18', data.sv_k18],
+        ['SV/K14', data.sv_k14],
+        ['SV/K10', data.sv_k10],
+      ]
+    }
+  ];
+
+  let html = '';
+  sections.forEach(sec => {
+    const visible = sec.items.filter(([, v]) => v != null);
+    if (!visible.length) return;
+    html += `<div class="result-section">${sec.label}</div>`;
+    visible.forEach(([label, val]) => {
+      html += `<div class="result-row">
+        <span class="result-label">${label}</span>
+        <span class="result-value ${sec.cls}">${val ? val.toLocaleString() + '円' : '-'}</span>
+      </div>`;
+    });
+  });
+
+  document.getElementById('resultBody').innerHTML = html;
+  document.getElementById('resultPanel').classList.add('show');
+  document.getElementById('submitBtn').style.display = 'flex';
+  document.getElementById('resetBtn').style.display = 'block';
+}
+
+async function submitToSheet() {
+  const gasUrl = localStorage.getItem('nj_gas_url');
+  if (!gasUrl) { alert('設定からGAS URLを入力してください'); return; }
+  if (!extractedData) return;
+
+  document.getElementById('submitBtn').disabled = true;
+  setStep('step3', 'active');
+
+  const d = extractedData;
+  const mapping = {
+    date: d.date,
+    gold_spot: d.gold_spot, k24: d.k24, k23: d.k23, k22: d.k22,
+    k216: d.k216, k20: d.k20, k18: d.k18, k14: d.k14, k10: d.k10,
+    k9: d.k9, k8: d.k8, k5: d.k5, kiba: d.kiba,
+    pt_ig: d.pt_ig, pt1000: d.pt1000, pt950: d.pt950, pt900: d.pt900, pt850: d.pt850,
+    sv_ig: d.sv_ig, sv1000: d.sv1000, sv925: d.sv925, sv: d.sv, pd: d.pd,
+    c950_19: d.c950_19, c950_37: d.c950_37, c950_55: d.c950_55, c950_73: d.c950_73, c950_91: d.c950_91,
+    c900_19: d.c900_19, c900_37: d.c900_37, c900_55: d.c900_55, c900_73: d.c900_73, c900_91: d.c900_91,
+    c850_19: d.c850_19, c850_37: d.c850_37, c850_55: d.c850_55, c850_73: d.c850_73, c850_91: d.c850_91,
+    sv_k18: d.sv_k18, sv_k14: d.sv_k14, sv_k10: d.sv_k10,
+  };
+
+  const params = Object.entries(mapping)
+    .filter(([, v]) => v != null)
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join('&');
+
+  const url = gasUrl + '?sheet=honbu&' + params;
+
+  try {
+    await fetch(url, { mode: 'no-cors' });
+    setStep('step3', 'done');
+    document.getElementById('successTime').textContent = new Date().toLocaleString('ja-JP');
+    document.getElementById('successMsg').classList.add('show');
+    document.getElementById('submitBtn').style.display = 'none';
+  } catch (err) {
+    setStep('step3', 'error');
+    alert('書き込みエラー: ' + err.message);
+    document.getElementById('submitBtn').disabled = false;
+  }
+}
+
+function reset() {
+  document.getElementById('fileInput').value = '';
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('uploadContent').style.display = 'block';
+  document.getElementById('uploadArea').classList.remove('has-image');
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('analyzeBtnText').innerHTML = '📊 画像を読み取る';
+  document.getElementById('progressPanel').classList.remove('show');
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('successMsg').classList.remove('show');
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'none';
+  extractedData = null;
+  imageBase64 = null;
+  ['step1','step2','step3'].forEach(s => {
+    const el = document.getElementById(s);
+    el.className = 'progress-step';
+  });
+}
+</script>
+</body>
+</html>
