@@ -4,251 +4,238 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="相場更新">
 <title>相場更新</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap');
-  :root {
-    --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#242424;--border:#2e2e2e;
-    --gold:#c9a84c;--gold-light:#e8c97a;--platinum:#a8b8c8;--silver:#8a9aaa;
-    --text:#f0f0f0;--text-muted:#888;--green:#4caf7d;--red:#e05555;--radius:12px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;padding:env(safe-area-inset-top) 20px 40px;}
-  .header{padding:20px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(15,15,15,0.95);backdrop-filter:blur(10px);z-index:100;}
-  .header-title{font-size:18px;font-weight:700;}
-  .header-title span{color:var(--gold);}
-  .settings-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;}
-  .main{max-width:480px;margin:20px auto;}
-  .settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:none;}
-  .settings-panel.open{display:block;}
-  .settings-panel label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;}
-  .settings-panel input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-size:13px;font-family:'DM Mono',monospace;margin-bottom:12px;outline:none;}
-  .settings-panel input:focus{border-color:var(--gold);}
-  .engine-btns{display:flex;gap:8px;margin-bottom:12px;}
-  .engine-btn{flex:1;padding:8px;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--text-muted);font-weight:700;font-family:inherit;cursor:pointer;font-size:13px;transition:all .2s;}
-  .engine-btn.active{background:var(--gold);color:#000;border-color:var(--gold);}
-  .save-btn{background:var(--gold);color:#000;border:none;border-radius:8px;padding:10px;font-weight:700;width:100%;cursor:pointer;font-family:inherit;font-size:14px;}
-  .upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:20px;position:relative;overflow:hidden;}
-  .upload-area.has-image{border-style:solid;border-color:var(--gold);padding:0;}
-  .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .upload-icon{font-size:36px;margin-bottom:8px;}
-  .upload-text{font-size:14px;color:var(--text-muted);}
-  .preview-img{width:100%;border-radius:calc(var(--radius) - 2px);display:block;}
-  .action-btn{width:100%;padding:16px;border-radius:var(--radius);border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .btn-analyze{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;}
-  .btn-analyze:disabled{opacity:.4;cursor:not-allowed;}
-  .progress{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:none;}
-  .progress.show{display:block;}
-  .progress-step{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;color:var(--text-muted);border-bottom:1px solid var(--border);}
-  .progress-step:last-child{border-bottom:none;}
-  .progress-step.done{color:var(--green);}
-  .progress-step.active{color:var(--gold);}
-  .progress-step.error{color:var(--red);}
-  .result-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;display:none;overflow:hidden;}
-  .result-panel.show{display:block;}
-  .result-header{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center;}
-  .result-date{color:var(--gold);font-family:'DM Mono',monospace;}
-  .result-section{padding:8px 16px;font-size:11px;background:var(--surface2);color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
-  .result-row{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid rgba(46,46,46,.5);font-size:14px;}
-  .result-row:last-child{border-bottom:none;}
-  .result-label{color:var(--text-muted);}
-  .result-value{font-family:'DM Mono',monospace;font-weight:500;}
-  .gold{color:var(--gold);}.platinum{color:var(--platinum);}.silver{color:var(--silver);}
-  .btn-submit{background:var(--green);color:#fff;}
-  .btn-submit:disabled{opacity:.4;}
-  .btn-reset{background:var(--surface2);color:var(--text-muted);}
-  .success-msg{background:rgba(76,175,125,.1);border:1px solid var(--green);border-radius:var(--radius);padding:20px;text-align:center;display:none;margin-bottom:20px;}
-  .success-msg.show{display:block;}
-  .success-text{color:var(--green);font-weight:700;font-size:16px;}
-  .success-sub{color:var(--text-muted);font-size:13px;margin-top:4px;}
-  .spinner{width:18px;height:18px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
-  @keyframes spin{to{transform:rotate(360deg);}}
+:root{--bg:#0f0f0f;--surface:#1a1a1a;--surface2:#242424;--border:#2e2e2e;--gold:#c9a84c;--gold-light:#e8c97a;--platinum:#a8b8c8;--silver:#8a9aaa;--text:#f0f0f0;--muted:#888;--green:#4caf7d;--red:#e05555;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:sans-serif;padding:20px;min-height:100vh;}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.hdr h1{font-size:18px;color:var(--text);}
+.hdr h1 span{color:var(--gold);}
+.btn{border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;}
+.btn-gold{background:var(--gold);color:#000;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-gray{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+.btn:disabled{opacity:.4;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px;display:none;}
+.panel.show{display:block;}
+.panel label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;}
+.panel input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;margin-bottom:10px;outline:none;}
+.eng{display:flex;gap:8px;margin-bottom:12px;}
+.eng button{flex:1;padding:8px;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--muted);font-weight:700;cursor:pointer;}
+.eng button.on{background:var(--gold);color:#000;border-color:var(--gold);}
+.upload{border:2px dashed var(--border);border-radius:var(--r);padding:36px;text-align:center;cursor:pointer;position:relative;overflow:hidden;margin-bottom:12px;}
+.upload.has-img{padding:0;border-color:var(--gold);border-style:solid;}
+.upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload img{width:100%;display:block;border-radius:10px;}
+.steps{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:12px;display:none;}
+.steps.show{display:block;}
+.step{padding:6px 0;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step.ok{color:var(--green);}
+.step.go{color:var(--gold);}
+.step.ng{color:var(--red);}
+.res{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;display:none;}
+.res.show{display:block;}
+.res-hdr{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px;color:var(--muted);}
+.res-hdr span{color:var(--gold);}
+.sec{padding:6px 14px;font-size:11px;background:var(--surface2);color:var(--muted);}
+.row{display:flex;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(46,46,46,.4);font-size:13px;}
+.row:last-child{border-bottom:none;}
+.row .lbl{color:var(--muted);}
+.row .val{font-family:monospace;}
+.gold-v{color:var(--gold);}
+.pt-v{color:var(--platinum);}
+.sv-v{color:var(--silver);}
+.ok-msg{background:rgba(76,175,125,.1);border:1px solid var(--green);border-radius:var(--r);padding:16px;text-align:center;display:none;margin-bottom:12px;color:var(--green);font-weight:700;}
+.ok-msg.show{display:block;}
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="header-title"><span>相場</span>更新アプリ</div>
-  <button class="settings-btn" onclick="toggleSettings()">⚙ 設定</button>
+<div class="hdr">
+  <h1><span>相場</span>更新アプリ</h1>
+  <button class="btn btn-gray" style="width:auto" onclick="document.getElementById('sp').classList.toggle('show')">設定</button>
 </div>
-<div class="main">
-  <div class="settings-panel" id="settingsPanel">
-    <label>AI エンジン</label>
-    <div class="engine-btns">
-      <button class="engine-btn" id="btnGemini" onclick="selectEngine('gemini')">Gemini（無料）</button>
-      <button class="engine-btn" id="btnClaude" onclick="selectEngine('claude')">Claude（有料）</button>
-    </div>
-    <label>Gemini API Key</label>
-    <input type="password" id="geminiKey" placeholder="AIza...">
-    <label>Claude API Key</label>
-    <input type="password" id="claudeKey" placeholder="sk-ant-...">
-    <label>GAS デプロイURL</label>
-    <input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/.../exec">
-    <button class="save-btn" onclick="saveSettings()">保存</button>
+
+<div class="panel show" id="sp">
+  <label>AIエンジン</label>
+  <div class="eng">
+    <button id="bg" class="on" onclick="setEng('gemini')">Gemini(無料)</button>
+    <button id="bc" onclick="setEng('claude')">Claude(有料)</button>
   </div>
-  <div class="upload-area" id="uploadArea">
-    <input type="file" accept="image/*" onchange="handleFile(event)">
-    <div id="uploadContent"><div class="upload-icon">📷</div><div class="upload-text">相場表画像を選択</div></div>
-    <img id="previewImg" class="preview-img" style="display:none">
-  </div>
-  <button class="action-btn btn-analyze" id="analyzeBtn" onclick="analyze()" disabled>
-    <span id="analyzeBtnText">📊 画像を読み取る</span>
-  </button>
-  <div class="progress" id="progressPanel">
-    <div class="progress-step" id="step1"><span>🔍</span> AI解析中...</div>
-    <div class="progress-step" id="step2"><span>📋</span> 数値抽出中...</div>
-    <div class="progress-step" id="step3"><span>📤</span> シート書込中...</div>
-  </div>
-  <div class="result-panel" id="resultPanel">
-    <div class="result-header">取得データ確認<span class="result-date" id="resultDate"></span></div>
-    <div id="resultBody"></div>
-  </div>
-  <button class="action-btn btn-submit" id="submitBtn" onclick="submitToSheet()" style="display:none">✅ シートに書き込む</button>
-  <div class="success-msg" id="successMsg">
-    <div class="success-text">✅ 更新完了！</div>
-    <div class="success-sub" id="successTime"></div>
-  </div>
-  <button class="action-btn btn-reset" id="resetBtn" onclick="location.reload()" style="display:none">🔄 別の画像を読み込む</button>
+  <label>Gemini API Key</label>
+  <input type="password" id="gk" placeholder="AIza...">
+  <label>Claude API Key</label>
+  <input type="password" id="ck" placeholder="sk-ant-...">
+  <label>GAS URL</label>
+  <input type="text" id="gu" placeholder="https://script.google.com/...">
+  <button class="btn btn-gold" onclick="save()">保存</button>
 </div>
+
+<div class="upload" id="ua">
+  <input type="file" accept="image/*" onchange="onFile(event)">
+  <div id="uc">📷 画像を選択</div>
+  <img id="pi" style="display:none">
+</div>
+
+<button class="btn btn-gold" id="ab" onclick="doAnalyze()" disabled>📊 画像を読み取る</button>
+
+<div class="steps" id="st">
+  <div class="step" id="s1">🔍 AI解析中...</div>
+  <div class="step" id="s2">📋 数値抽出中...</div>
+  <div class="step" id="s3">📤 シート書込中...</div>
+</div>
+
+<div class="res" id="rp">
+  <div class="res-hdr">取得データ<span id="rd"></span></div>
+  <div id="rb"></div>
+</div>
+
+<button class="btn btn-green" id="sb" onclick="doSubmit()" style="display:none">シートに書き込む</button>
+<div class="ok-msg" id="om">✅ 更新完了！</div>
+<button class="btn btn-gray" id="rb2" onclick="location.reload()" style="display:none">🔄 別の画像</button>
+
 <script>
-let extractedData=null,imageBase64=null,imageMediaType='image/jpeg';
-let currentEngine=localStorage.getItem('nj_engine')||'gemini';
+var data=null,b64=null,mime='image/jpeg',eng=localStorage.getItem('eng')||'gemini';
 
-const PROMPT='この相場表画像から数値をJSONで抽出してください。存在しない項目はnull。数値はカンマなしの整数。JSONのみ返してください。\n{"date":"M/D形式","gold_spot":金スポット,"k24":K24スクラップ,"k23":K23,"k22":K22,"k216":K21.6,"k20":K20,"k18":K18,"k14":K14,"k10":K10,"k9":K9,"k8":K8,"k5":K5,"kiba":金歯,"pt_ig":Pt地金,"pt1000":Pt1000スクラップ,"pt950":Pt950,"pt900":Pt900,"pt850":Pt850,"sv_ig":銀地金,"sv1000":Sv1000スクラップ,"sv925":Sv925,"sv":SV素材銀,"pd":Pd,"c950_19":Pt950/K18Kメイン1:9,"c950_37":Pt950/K18Kメイン3:7,"c950_55":Pt950/K18ハーフ5:5,"c950_73":Pt950/K18Ptメイン7:3,"c950_91":Pt950/K18Ptメイン9:1,"c900_19":Pt900/K18Kメイン1:9,"c900_37":Pt900/K18Kメイン3:7,"c900_55":Pt900/K18ハーフ5:5,"c900_73":Pt900/K18Ptメイン7:3,"c900_91":Pt900/K18Ptメイン9:1,"c850_19":Pt850/K18Kメイン1:9,"c850_37":Pt850/K18Kメイン3:7,"c850_55":Pt850/K18ハーフ5:5,"c850_73":Pt850/K18Ptメイン7:3,"c850_91":Pt850/K18Ptメイン9:1,"sv_k18":SV/K18コンビ,"sv_k14":SV/K14コンビ,"sv_k10":SV/K10コンビ}';
-
-window.onload=()=>{
-  document.getElementById('geminiKey').value=localStorage.getItem('nj_gemini_key')||'';
-  document.getElementById('claudeKey').value=localStorage.getItem('nj_claude_key')||'';
-  document.getElementById('gasUrl').value=localStorage.getItem('nj_gas_url')||'';
-  selectEngine(currentEngine);
+window.onload=function(){
+  document.getElementById('gk').value=localStorage.getItem('gk')||'';
+  document.getElementById('ck').value=localStorage.getItem('ck')||'';
+  document.getElementById('gu').value=localStorage.getItem('gu')||'';
+  setEng(eng);
 };
 
-function selectEngine(e){
-  currentEngine=e;localStorage.setItem('nj_engine',e);
-  document.getElementById('btnGemini').classList.toggle('active',e==='gemini');
-  document.getElementById('btnClaude').classList.toggle('active',e==='claude');
+function setEng(e){
+  eng=e;localStorage.setItem('eng',e);
+  document.getElementById('bg').className=e==='gemini'?'on':'';
+  document.getElementById('bc').className=e==='claude'?'on':'';
 }
-function toggleSettings(){document.getElementById('settingsPanel').classList.toggle('open');}
-function saveSettings(){
-  localStorage.setItem('nj_gemini_key',document.getElementById('geminiKey').value.trim());
-  localStorage.setItem('nj_claude_key',document.getElementById('claudeKey').value.trim());
-  localStorage.setItem('nj_gas_url',document.getElementById('gasUrl').value.trim());
-  toggleSettings();alert('保存しました');
-}
-function handleFile(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=(ev)=>{
-    imageBase64=ev.target.result.split(',')[1];
-    imageMediaType=file.type||'image/jpeg';
-    const img=document.getElementById('previewImg');
-    img.src=ev.target.result;img.style.display='block';
-    document.getElementById('uploadContent').style.display='none';
-    document.getElementById('uploadArea').classList.add('has-image');
-    document.getElementById('analyzeBtn').disabled=false;
-    document.getElementById('resultPanel').classList.remove('show');
-    document.getElementById('successMsg').classList.remove('show');
-    document.getElementById('submitBtn').style.display='none';
-    document.getElementById('resetBtn').style.display='none';
-    extractedData=null;
-  };
-  reader.readAsDataURL(file);
-}
-function setStep(id,state){document.getElementById(id).className='progress-step '+state;}
 
-async function analyze(){
-  const apiKey=localStorage.getItem(currentEngine==='gemini'?'nj_gemini_key':'nj_claude_key');
-  if(!apiKey)return alert((currentEngine==='gemini'?'Gemini':'Claude')+' APIキーを設定してください');
-  if(!imageBase64)return alert('画像を選択してください');
-  const btn=document.getElementById('analyzeBtn');
-  btn.disabled=true;
-  document.getElementById('analyzeBtnText').innerHTML='<span class="spinner"></span> 解析中...';
-  document.getElementById('progressPanel').classList.add('show');
-  document.getElementById('resultPanel').classList.remove('show');
-  document.getElementById('submitBtn').style.display='none';
-  setStep('step1','active');setStep('step2','');setStep('step3','');
+function save(){
+  localStorage.setItem('gk',document.getElementById('gk').value.trim());
+  localStorage.setItem('ck',document.getElementById('ck').value.trim());
+  localStorage.setItem('gu',document.getElementById('gu').value.trim());
+  document.getElementById('sp').classList.remove('show');
+  alert('保存しました');
+}
+
+function onFile(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    b64=ev.target.result.split(',')[1];
+    mime=f.type||'image/jpeg';
+    document.getElementById('pi').src=ev.target.result;
+    document.getElementById('pi').style.display='block';
+    document.getElementById('uc').style.display='none';
+    document.getElementById('ua').className='upload has-img';
+    document.getElementById('ab').disabled=false;
+    document.getElementById('rp').classList.remove('show');
+    document.getElementById('om').classList.remove('show');
+    document.getElementById('sb').style.display='none';
+    document.getElementById('rb2').style.display='none';
+    data=null;
+  };
+  r.readAsDataURL(f);
+}
+
+function ss(id,cls){document.getElementById(id).className='step '+cls;}
+
+function getPrompt(){
+  return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10';
+}
+
+async function doAnalyze(){
+  var key=localStorage.getItem(eng==='gemini'?'gk':'ck');
+  if(!key)return alert('APIキーを設定してください');
+  if(!b64)return alert('画像を選択してください');
+  document.getElementById('ab').disabled=true;
+  document.getElementById('ab').textContent='解析中...';
+  document.getElementById('st').classList.add('show');
+  document.getElementById('rp').classList.remove('show');
+  document.getElementById('sb').style.display='none';
+  ss('s1','go');ss('s2','');ss('s3','');
   try{
-    let text;
-    if(currentEngine==='gemini'){
-      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
+    var text;
+    if(eng==='gemini'){
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{
         method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{parts:[{text:PROMPT},{inline_data:{mime_type:imageMediaType,data:imageBase64}}]}]})
+        body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})
       });
-      const d=await res.json();
-      if(!res.ok)throw new Error('Gemini: '+(d.error?.message||JSON.stringify(d.error)));
+      var d=await res.json();
+      if(!res.ok)throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.candidates[0].content.parts[0].text;
     }else{
-      const res=await fetch('https://api.anthropic.com/v1/messages',{
+      var res=await fetch('https://api.anthropic.com/v1/messages',{
         method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
         body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:imageMediaType,data:imageBase64}},
-          {type:'text',text:PROMPT}
+          {type:'image',source:{type:'base64',media_type:mime,data:b64}},
+          {type:'text',text:getPrompt()}
         ]}]})
       });
-      const d=await res.json();
-      if(!res.ok)throw new Error('Claude: '+(d.error?.message||JSON.stringify(d.error)));
+      var d=await res.json();
+      if(!res.ok)throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.content[0].text;
     }
-    setStep('step1','done');setStep('step2','active');
-    const match=text.match(/\{[\s\S]*\}/);
-    if(!match)throw new Error('JSON形式で返ってきませんでした: '+text.substring(0,100));
-    extractedData=JSON.parse(match[0]);
-    setStep('step2','done');
-    showResult(extractedData);
-    btn.disabled=false;
-    document.getElementById('analyzeBtnText').innerHTML='📊 再読み取り';
+    ss('s1','ok');ss('s2','go');
+    var m=text.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error('JSONが見つかりません');
+    data=JSON.parse(m[0]);
+    ss('s2','ok');
+    showResult(data);
+    document.getElementById('ab').disabled=false;
+    document.getElementById('ab').textContent='📊 再読み取り';
   }catch(err){
-    setStep('step1','error');
+    ss('s1','ng');
     alert('エラー: '+err.message);
-    btn.disabled=false;
-    document.getElementById('analyzeBtnText').innerHTML='📊 画像を読み取る';
+    document.getElementById('ab').disabled=false;
+    document.getElementById('ab').textContent='📊 画像を読み取る';
   }
 }
 
-function showResult(data){
-  document.getElementById('resultDate').textContent=data.date||'-';
-  const sections=[
-    {label:'金スクラップ',cls:'gold',keys:[['金スポット','gold_spot'],['K24','k24'],['K23','k23'],['K22','k22'],['K21.6','k216'],['K20','k20'],['K18','k18'],['K14','k14'],['K10','k10'],['K9','k9'],['K8','k8'],['K5','k5'],['金歯','kiba']]},
-    {label:'Ptスクラップ',cls:'platinum',keys:[['Pt地金','pt_ig'],['Pt1000','pt1000'],['Pt950','pt950'],['Pt900','pt900'],['Pt850','pt850']]},
-    {label:'銀・Pd',cls:'silver',keys:[['Sv地金','sv_ig'],['Sv1000','sv1000'],['Sv925','sv925'],['SV','sv'],['Pd','pd']]},
-    {label:'コンビ',cls:'',keys:[['950/K18 1:9','c950_19'],['950/K18 3:7','c950_37'],['950/K18 5:5','c950_55'],['950/K18 7:3','c950_73'],['950/K18 9:1','c950_91'],['900/K18 1:9','c900_19'],['900/K18 3:7','c900_37'],['900/K18 5:5','c900_55'],['900/K18 7:3','c900_73'],['900/K18 9:1','c900_91'],['850/K18 1:9','c850_19'],['850/K18 3:7','c850_37'],['850/K18 5:5','c850_55'],['850/K18 7:3','c850_73'],['850/K18 9:1','c850_91'],['SV/K18','sv_k18'],['SV/K14','sv_k14'],['SV/K10','sv_k10']]}
+function showResult(d){
+  document.getElementById('rd').textContent=d.date||'';
+  var secs=[
+    {t:'金スクラップ',c:'gold-v',k:[['金スポット','gold_spot'],['K24','k24'],['K23','k23'],['K22','k22'],['K21.6','k216'],['K20','k20'],['K18','k18'],['K14','k14'],['K10','k10'],['K9','k9'],['K8','k8'],['K5','k5'],['金歯','kiba']]},
+    {t:'Ptスクラップ',c:'pt-v',k:[['Pt地金','pt_ig'],['Pt1000','pt1000'],['Pt950','pt950'],['Pt900','pt900'],['Pt850','pt850']]},
+    {t:'銀・Pd',c:'sv-v',k:[['Sv地金','sv_ig'],['Sv1000','sv1000'],['Sv925','sv925'],['SV','sv'],['Pd','pd']]},
+    {t:'コンビ',c:'',k:[['950/K18 1:9','c950_19'],['950/K18 3:7','c950_37'],['950/K18 5:5','c950_55'],['950/K18 7:3','c950_73'],['950/K18 9:1','c950_91'],['900/K18 1:9','c900_19'],['900/K18 3:7','c900_37'],['900/K18 5:5','c900_55'],['900/K18 7:3','c900_73'],['900/K18 9:1','c900_91'],['850/K18 1:9','c850_19'],['850/K18 3:7','c850_37'],['850/K18 5:5','c850_55'],['850/K18 7:3','c850_73'],['850/K18 9:1','c850_91'],['SV/K18','sv_k18'],['SV/K14','sv_k14'],['SV/K10','sv_k10']]}
   ];
-  let html='';
-  sections.forEach(sec=>{
-    const rows=sec.keys.filter(([,k])=>data[k]!=null);
+  var html='';
+  secs.forEach(function(sec){
+    var rows=sec.k.filter(function(x){return d[x[1]]!=null;});
     if(!rows.length)return;
-    html+=`<div class="result-section">${sec.label}</div>`;
-    rows.forEach(([label,key])=>{
-      html+=`<div class="result-row"><span class="result-label">${label}</span><span class="result-value ${sec.cls}">${Number(data[key]).toLocaleString()}円</span></div>`;
+    html+='<div class="sec">'+sec.t+'</div>';
+    rows.forEach(function(x){
+      html+='<div class="row"><span class="lbl">'+x[0]+'</span><span class="val '+sec.c+'">'+Number(d[x[1]]).toLocaleString()+'円</span></div>';
     });
   });
-  document.getElementById('resultBody').innerHTML=html;
-  document.getElementById('resultPanel').classList.add('show');
-  document.getElementById('submitBtn').style.display='flex';
-  document.getElementById('resetBtn').style.display='flex';
+  document.getElementById('rb').innerHTML=html;
+  document.getElementById('rp').classList.add('show');
+  document.getElementById('sb').style.display='block';
+  document.getElementById('rb2').style.display='block';
 }
 
-async function submitToSheet(){
-  const gasUrl=localStorage.getItem('nj_gas_url');
-  if(!gasUrl)return alert('GAS URLを設定してください');
-  if(!extractedData)return;
-  document.getElementById('submitBtn').disabled=true;
-  setStep('step3','active');
-  const params=Object.entries(extractedData).filter(([,v])=>v!=null).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+async function doSubmit(){
+  var url=localStorage.getItem('gu');
+  if(!url)return alert('GAS URLを設定してください');
+  if(!data)return;
+  document.getElementById('sb').disabled=true;
+  ss('s3','go');
+  var params=Object.keys(data).filter(function(k){return data[k]!=null;}).map(function(k){return k+'='+encodeURIComponent(data[k]);}).join('&');
   try{
-    await fetch(`${gasUrl}?sheet=honbu&${params}`,{mode:'no-cors'});
-    setStep('step3','done');
-    document.getElementById('successTime').textContent=new Date().toLocaleString('ja-JP');
-    document.getElementById('successMsg').classList.add('show');
-    document.getElementById('submitBtn').style.display='none';
+    await fetch(url+'?sheet=honbu&'+params,{mode:'no-cors'});
+    ss('s3','ok');
+    document.getElementById('om').classList.add('show');
+    document.getElementById('sb').style.display='none';
   }catch(e){
-    setStep('step3','error');
+    ss('s3','ng');
     alert('書込エラー: '+e.message);
-    document.getElementById('submitBtn').disabled=false;
+    document.getElementById('sb').disabled=false;
   }
 }
 </script>
 </body>
-</html> 
+</html>
