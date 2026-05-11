@@ -7,156 +7,147 @@
 <meta name="apple-mobile-web-app-title" content="相場更新">
 <title>相場更新</title>
 <style>
-:root{--bg:#0f0f0f;--sur:#1a1a1a;--sur2:#242424;--bdr:#2e2e2e;--gold:#c9a84c;--gl:#e8c97a;--pt:#a8b8c8;--sv:#8a9aaa;--tx:#f0f0f0;--mu:#888;--gn:#4caf7d;--rd:#e05555;--r:12px;}
+:root{--bg:#0f0f0f;--sur:#1a1a1a;--sur2:#242424;--bdr:#2e2e2e;--gold:#c9a84c;--pt:#a8b8c8;--sv:#8a9aaa;--tx:#f0f0f0;--mu:#888;--gn:#4caf7d;--rd:#e05555;--r:10px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--tx);font-family:sans-serif;min-height:100vh;}
 .tabs{display:flex;border-bottom:1px solid var(--bdr);background:var(--sur);position:sticky;top:0;z-index:100;}
-.tab{flex:1;padding:14px 8px;text-align:center;font-size:13px;font-weight:700;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;}
+.tab{flex:1;padding:13px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold);}
-.pg{display:none;padding:16px;max-width:500px;margin:0 auto;}
+.pg{display:none;padding:12px;}
 .pg.on{display:block;}
-.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:12px;}
-.card h3{font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
-.btn{border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px;}
-.btn-gold{background:var(--gold);color:#000;}
-.btn-green{background:var(--gn);color:#fff;}
-.btn-gray{background:var(--sur2);color:var(--mu);border:1px solid var(--bdr);}
-.btn-red{background:var(--rd);color:#fff;}
+/* 合計バー */
+.total-bar{background:rgba(201,168,76,.12);border:1px solid var(--gold);border-radius:var(--r);padding:12px 16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.total-bar .tl{font-size:12px;color:var(--mu);}
+.total-bar .tv{font-size:24px;font-weight:700;color:var(--gold);}
+/* 表 */
+.tbl-wrap{overflow-x:auto;margin-bottom:12px;border-radius:var(--r);border:1px solid var(--bdr);}
+table{border-collapse:collapse;min-width:100%;}
+thead tr{background:var(--sur2);}
+thead th{padding:8px 6px;font-size:11px;color:var(--mu);white-space:nowrap;border-bottom:2px solid var(--bdr);text-align:center;min-width:72px;}
+thead th:first-child{min-width:40px;width:40px;}
+tbody tr{border-bottom:1px solid var(--bdr);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
+tbody td{padding:6px 4px;text-align:center;font-size:13px;vertical-align:middle;}
+tbody td:first-child{color:var(--mu);font-size:11px;}
+/* セル内input/select */
+td select,td input[type=number],td input[type=text]{background:var(--bg);border:1px solid var(--bdr);border-radius:5px;color:var(--tx);padding:5px 4px;font-size:12px;width:100%;text-align:center;outline:none;}
+td select:focus,td input:focus{border-color:var(--gold);}
+/* 結果セル */
+.c-max{color:var(--gold);font-weight:700;}
+.c-fin{color:var(--gn);font-weight:700;}
+/* ボタン */
+.btn{border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;}
+.btn-gold{background:var(--gold);color:#000;width:100%;}
+.btn-gray{background:var(--sur2);color:var(--mu);border:1px solid var(--bdr);width:100%;}
+.btn-green{background:var(--gn);color:#fff;width:100%;}
 .btn:disabled{opacity:.4;}
-.eng{display:flex;gap:8px;margin-bottom:12px;}
-.eng button{flex:1;padding:8px;border-radius:8px;border:2px solid var(--bdr);background:transparent;color:var(--mu);font-weight:700;cursor:pointer;font-size:13px;}
-.eng button.on{background:var(--gold);color:#000;border-color:var(--gold);}
-label{display:block;font-size:11px;color:var(--mu);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
-input,select{width:100%;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--tx);padding:10px 12px;font-size:14px;margin-bottom:10px;outline:none;}
-input:focus,select:focus{border-color:var(--gold);}
-select option{background:var(--bg);}
-.upload{border:2px dashed var(--bdr);border-radius:var(--r);padding:36px;text-align:center;cursor:pointer;position:relative;overflow:hidden;margin-bottom:12px;}
+/* 相場取得タブ */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;margin-bottom:10px;}
+.card h3{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.pg_grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.pi-box{background:var(--sur2);border-radius:6px;padding:7px 9px;}
+.pi-box .pl{font-size:10px;color:var(--mu);}
+.pi-box .pv{font-size:13px;font-weight:700;font-family:monospace;}
+.gold-v{color:var(--gold);}
+.pt-v{color:var(--pt);}
+.sv-v{color:var(--sv);}
+.upload{border:2px dashed var(--bdr);border-radius:var(--r);padding:30px;text-align:center;cursor:pointer;position:relative;overflow:hidden;margin-bottom:10px;}
 .upload.has-img{padding:0;border-color:var(--gold);border-style:solid;}
 .upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;margin:0;}
-.upload img{width:100%;display:block;border-radius:10px;}
-.steps{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;margin-bottom:12px;display:none;}
+.upload img{width:100%;display:block;border-radius:8px;}
+.steps{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:10px;margin-bottom:10px;display:none;}
 .steps.show{display:block;}
-.step{padding:6px 0;font-size:13px;color:var(--mu);border-bottom:1px solid var(--bdr);}
+.step{padding:5px 0;font-size:12px;color:var(--mu);border-bottom:1px solid var(--bdr);}
 .step:last-child{border-bottom:none;}
 .step.ok{color:var(--gn);}
 .step.go{color:var(--gold);}
 .step.ng{color:var(--rd);}
-.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
-.price-item{background:var(--sur2);border-radius:6px;padding:8px 10px;}
-.price-item .pl{font-size:11px;color:var(--mu);}
-.price-item .pv{font-size:14px;font-weight:700;font-family:monospace;}
-.gold-v{color:var(--gold);}
-.pt-v{color:var(--pt);}
-.sv-v{color:var(--sv);}
-.assess-row{background:var(--sur2);border-radius:8px;padding:12px;margin-bottom:10px;position:relative;}
-.assess-row .rm{position:absolute;top:8px;right:8px;background:var(--rd);color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer;}
-.assess-row .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.assess-row .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.res-box{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:12px;}
-.res-box .rr{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:14px;}
-.res-box .rr:last-child{border-bottom:none;}
-.res-box .rr .rl{color:var(--mu);font-size:13px;}
-.res-box .rr .rv{font-family:monospace;font-weight:700;}
-.total-box{background:rgba(201,168,76,.1);border:1px solid var(--gold);border-radius:var(--r);padding:16px;text-align:center;margin-bottom:12px;}
-.total-box .tl{font-size:12px;color:var(--mu);margin-bottom:4px;}
-.total-box .tv{font-size:28px;font-weight:700;color:var(--gold);}
-.badge{display:inline-block;background:var(--gold);color:#000;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700;margin-left:6px;}
-.ok-msg{background:rgba(76,175,125,.1);border:1px solid var(--gn);border-radius:var(--r);padding:14px;text-align:center;display:none;margin-bottom:12px;color:var(--gn);font-weight:700;}
+.sbar{background:var(--sur2);border:1px solid var(--bdr);border-radius:7px;padding:7px 11px;font-size:11px;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--rd);flex-shrink:0;}
+.sdot.ok{background:var(--gn);}
+/* 設定 */
+.fp label{display:block;font-size:11px;color:var(--mu);margin-bottom:3px;text-transform:uppercase;}
+.fp input{width:100%;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--tx);padding:9px 10px;font-size:13px;margin-bottom:9px;outline:none;}
+.eng{display:flex;gap:7px;margin-bottom:10px;}
+.eng button{flex:1;padding:7px;border-radius:7px;border:2px solid var(--bdr);background:transparent;color:var(--mu);font-weight:700;cursor:pointer;font-size:12px;}
+.eng button.on{background:var(--gold);color:#000;border-color:var(--gold);}
+.ok-msg{background:rgba(76,175,125,.1);border:1px solid var(--gn);border-radius:var(--r);padding:12px;text-align:center;display:none;margin-bottom:10px;color:var(--gn);font-weight:700;font-size:13px;}
 .ok-msg.show{display:block;}
-.status-bar{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--mu);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.status-dot{width:8px;height:8px;border-radius:50%;background:var(--rd);}
-.status-dot.ok{background:var(--gn);}
 </style>
 </head>
 <body>
 
 <div class="tabs">
-  <div class="tab on" onclick="showTab('t1',this)">📷 相場取得</div>
-  <div class="tab" onclick="showTab('t2',this)">💰 査定計算</div>
+  <div class="tab on" onclick="showTab('t1',this)">📷 相場</div>
+  <div class="tab" onclick="showTab('t2',this)">💰 査定</div>
   <div class="tab" onclick="showTab('t3',this)">⚙ 設定</div>
 </div>
 
-<!-- TAB1: 相場取得 -->
+<!-- TAB1 相場取得 -->
 <div class="pg on" id="t1">
-  <div class="status-bar">
-    <div class="status-dot" id="sdot"></div>
-    <span id="stext">相場未取得 — 画像を読み取ってください</span>
-  </div>
-
-  <div class="upload" id="ua">
-    <input type="file" accept="image/*" onchange="onFile(event)">
-    <div id="uc" style="font-size:14px;color:var(--mu)">📷 相場表画像を選択</div>
+  <div class="sbar"><div class="sdot" id="sd1"></div><span id="st1">相場未取得</span></div>
+  <div class="upload" id="ua"><input type="file" accept="image/*" onchange="onFile(event)">
+    <div id="uc" style="font-size:13px;color:var(--mu)">📷 相場表画像を選択</div>
     <img id="pi" style="display:none">
   </div>
-
   <button class="btn btn-gold" id="ab" onclick="doAnalyze()" disabled>📊 画像を読み取る</button>
-
-  <div class="steps" id="st">
-    <div class="step" id="s1">🔍 AI解析中...</div>
-    <div class="step" id="s2">📋 数値抽出中...</div>
-    <div class="step" id="s3">📤 シート書込中...</div>
-  </div>
-
-  <div id="priceView" style="display:none">
-    <div class="card">
-      <h3>金スクラップ <span id="pdate" class="badge"></span></h3>
-      <div class="price-grid" id="pg_gold"></div>
-    </div>
-    <div class="card">
-      <h3>Ptスクラップ</h3>
-      <div class="price-grid" id="pg_pt"></div>
-    </div>
-    <div class="card">
-      <h3>銀・Pd</h3>
-      <div class="price-grid" id="pg_sv"></div>
-    </div>
+  <div class="steps" id="st"><div class="step" id="s1">🔍 AI解析中...</div><div class="step" id="s2">📋 数値抽出中...</div><div class="step" id="s3">📤 シート書込中...</div></div>
+  <div id="pv" style="display:none">
+    <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold)"></span></h3><div class="pg_grid" id="pg_g"></div></div>
+    <div class="card"><h3>Ptスクラップ</h3><div class="pg_grid" id="pg_p"></div></div>
+    <div class="card"><h3>銀・Pd</h3><div class="pg_grid" id="pg_s"></div></div>
     <button class="btn btn-green" id="wb" onclick="doWrite()" style="display:none">📤 シートに書き込む</button>
     <div class="ok-msg" id="wok">✅ シートに書き込みました</div>
   </div>
 </div>
 
-<!-- TAB2: 査定計算 -->
+<!-- TAB2 査定計算 -->
 <div class="pg" id="t2">
-  <div class="status-bar">
-    <div class="status-dot" id="sdot2"></div>
-    <span id="stext2">相場未取得</span>
+  <div class="sbar"><div class="sdot" id="sd2"></div><span id="st2">相場未取得</span></div>
+  <div class="total-bar">
+    <div><div class="tl">合計MAX</div><div class="tv" id="totalMax">¥0</div></div>
+    <div style="text-align:right"><div class="tl">件数</div><div style="font-size:18px;font-weight:700;color:var(--mu)" id="itemCount">0件</div></div>
   </div>
-
-  <div class="total-box">
-    <div class="tl">合計MAX</div>
-    <div class="tv" id="totalMax">¥0</div>
+  <div class="tbl-wrap">
+    <table id="assessTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>品位</th>
+          <th>重さ(g)</th>
+          <th>石引(g)</th>
+          <th>地金(g)</th>
+          <th>地金MAX</th>
+          <th>先付け</th>
+          <th>他社</th>
+          <th>MAX</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="assessBody"></tbody>
+    </table>
   </div>
-
-  <div id="assessList"></div>
-
-  <button class="btn btn-gold" onclick="addItem()">＋ アイテムを追加</button>
-  <button class="btn btn-gray" onclick="clearAll()" style="margin-top:4px">🗑 すべてクリア</button>
+  <button class="btn btn-gold" onclick="addRow()">＋ 行を追加</button>
+  <button class="btn btn-gray" onclick="clearRows()" style="margin-top:4px">🗑 クリア</button>
 </div>
 
-<!-- TAB3: 設定 -->
+<!-- TAB3 設定 -->
 <div class="pg" id="t3">
-  <div class="card">
+  <div class="card fp">
     <h3>AIエンジン</h3>
-    <div class="eng">
-      <button id="bg" class="on" onclick="setEng('gemini')">Gemini(無料)</button>
-      <button id="bc" onclick="setEng('claude')">Claude(有料)</button>
-    </div>
-    <label>Gemini API Key</label>
-    <input type="password" id="gk" placeholder="AIza...">
-    <label>Claude API Key</label>
-    <input type="password" id="ck" placeholder="sk-ant-...">
-    <label>GAS デプロイURL</label>
-    <input type="text" id="gu" placeholder="https://script.google.com/...">
+    <div class="eng"><button id="bg" class="on" onclick="setEng('gemini')">Gemini(無料)</button><button id="bc" onclick="setEng('claude')">Claude(有料)</button></div>
+    <label>Gemini API Key</label><input type="password" id="gk" placeholder="AIza...">
+    <label>Claude API Key</label><input type="password" id="ck" placeholder="sk-ant-...">
+    <label>GAS デプロイURL</label><input type="text" id="gu" placeholder="https://script.google.com/...">
     <button class="btn btn-gold" onclick="save()">保存</button>
   </div>
 </div>
 
 <script>
-var mktData=null, b64=null, mime='image/jpeg';
-var eng=localStorage.getItem('eng')||'gemini';
-var items=[];
+var mkt=null,eng=localStorage.getItem('eng')||'gemini',b64=null,mime='image/jpeg';
+var rows=[],rid=0;
 
-// 品位マスター（キー: 表示名, 値: mktDataのキー）
 var GRADES=[
   {n:'K24(IG)',k:'gold_spot'},{n:'K24(S)',k:'k24'},{n:'K23',k:'k23'},{n:'K22',k:'k22'},
   {n:'K21.6',k:'k216'},{n:'K20',k:'k20'},{n:'K18',k:'k18'},{n:'K18WG',k:'k18'},
@@ -164,14 +155,10 @@ var GRADES=[
   {n:'K8',k:'k8'},{n:'K5',k:'k5'},{n:'金歯',k:'kiba'},
   {n:'Pt1000(IG)',k:'pt_ig'},{n:'Pt1000(S)',k:'pt1000'},{n:'Pt950',k:'pt950'},
   {n:'Pt900',k:'pt900'},{n:'Pt850',k:'pt850'},
-  {n:'Sv1000(IG)',k:'sv_ig'},{n:'Sv1000(S)',k:'sv1000'},{n:'Sv925',k:'sv925'},
-  {n:'SV',k:'sv'},{n:'Pd',k:'pd'},
-  {n:'950/K18 1:9',k:'c950_19'},{n:'950/K18 3:7',k:'c950_37'},{n:'950/K18 5:5',k:'c950_55'},
-  {n:'950/K18 7:3',k:'c950_73'},{n:'950/K18 9:1',k:'c950_91'},
-  {n:'900/K18 1:9',k:'c900_19'},{n:'900/K18 3:7',k:'c900_37'},{n:'900/K18 5:5',k:'c900_55'},
-  {n:'900/K18 7:3',k:'c900_73'},{n:'900/K18 9:1',k:'c900_91'},
-  {n:'850/K18 1:9',k:'c850_19'},{n:'850/K18 3:7',k:'c850_37'},{n:'850/K18 5:5',k:'c850_55'},
-  {n:'850/K18 7:3',k:'c850_73'},{n:'850/K18 9:1',k:'c850_91'},
+  {n:'Sv1000(IG)',k:'sv_ig'},{n:'Sv1000(S)',k:'sv1000'},{n:'Sv925',k:'sv925'},{n:'SV',k:'sv'},{n:'Pd',k:'pd'},
+  {n:'950/K18 1:9',k:'c950_19'},{n:'950/K18 3:7',k:'c950_37'},{n:'950/K18 5:5',k:'c950_55'},{n:'950/K18 7:3',k:'c950_73'},{n:'950/K18 9:1',k:'c950_91'},
+  {n:'900/K18 1:9',k:'c900_19'},{n:'900/K18 3:7',k:'c900_37'},{n:'900/K18 5:5',k:'c900_55'},{n:'900/K18 7:3',k:'c900_73'},{n:'900/K18 9:1',k:'c900_91'},
+  {n:'850/K18 1:9',k:'c850_19'},{n:'850/K18 3:7',k:'c850_37'},{n:'850/K18 5:5',k:'c850_55'},{n:'850/K18 7:3',k:'c850_73'},{n:'850/K18 9:1',k:'c850_91'},
   {n:'SV/K18',k:'sv_k18'},{n:'SV/K14',k:'sv_k14'},{n:'SV/K10',k:'sv_k10'}
 ];
 
@@ -180,9 +167,9 @@ window.onload=function(){
   document.getElementById('ck').value=localStorage.getItem('ck')||'';
   document.getElementById('gu').value=localStorage.getItem('gu')||'';
   setEng(eng);
-  var saved=localStorage.getItem('mktData');
-  if(saved){mktData=JSON.parse(saved);updateStatusBar();showPriceView();}
-  addItem();
+  var s=localStorage.getItem('mkt');
+  if(s){mkt=JSON.parse(s);updateStatus();}
+  for(var i=0;i<10;i++)addRow();
 };
 
 function showTab(id,el){
@@ -190,27 +177,26 @@ function showTab(id,el){
   document.querySelectorAll('.tab').forEach(function(e){e.classList.remove('on');});
   document.getElementById(id).classList.add('on');
   el.classList.add('on');
+  if(id==='t2')renderTable();
 }
 
-function setEng(e){
-  eng=e;localStorage.setItem('eng',e);
-  document.getElementById('bg').className=e==='gemini'?'on':'';
-  document.getElementById('bc').className=e==='claude'?'on':'';
-}
+function setEng(e){eng=e;localStorage.setItem('eng',e);document.getElementById('bg').className=e==='gemini'?'on':'';document.getElementById('bc').className=e==='claude'?'on':'';}
+function save(){localStorage.setItem('gk',document.getElementById('gk').value.trim());localStorage.setItem('ck',document.getElementById('ck').value.trim());localStorage.setItem('gu',document.getElementById('gu').value.trim());alert('保存しました');}
 
-function save(){
-  localStorage.setItem('gk',document.getElementById('gk').value.trim());
-  localStorage.setItem('ck',document.getElementById('ck').value.trim());
-  localStorage.setItem('gu',document.getElementById('gu').value.trim());
-  alert('保存しました');
+function updateStatus(){
+  if(!mkt)return;
+  var txt=(mkt.date||'')+'の相場取得済み';
+  ['sd1','sd2'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='sdot ok';});
+  ['st1','st2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=txt;});
+  showPriceView();
+  renderTable();
 }
 
 function onFile(e){
   var f=e.target.files[0];if(!f)return;
   var r=new FileReader();
   r.onload=function(ev){
-    b64=ev.target.result.split(',')[1];
-    mime=f.type||'image/jpeg';
+    b64=ev.target.result.split(',')[1];mime=f.type||'image/jpeg';
     document.getElementById('pi').src=ev.target.result;
     document.getElementById('pi').style.display='block';
     document.getElementById('uc').style.display='none';
@@ -222,201 +208,117 @@ function onFile(e){
 
 function ss(id,cls){document.getElementById(id).className='step '+cls;}
 
-function getPrompt(){
-  return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10';
-}
+function getPrompt(){return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10';}
 
 async function doAnalyze(){
   var key=localStorage.getItem(eng==='gemini'?'gk':'ck');
   if(!key)return alert('APIキーを設定してください');
   if(!b64)return alert('画像を選択してください');
-  document.getElementById('ab').disabled=true;
-  document.getElementById('ab').textContent='解析中...';
-  document.getElementById('st').classList.add('show');
-  document.getElementById('priceView').style.display='none';
+  document.getElementById('ab').disabled=true;document.getElementById('ab').textContent='解析中...';
+  document.getElementById('st').classList.add('show');document.getElementById('pv').style.display='none';
   ss('s1','go');ss('s2','');ss('s3','');
   try{
     var text;
     if(eng==='gemini'){
-      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})
-      });
-      var d=await res.json();
-      if(!res.ok)throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})});
+      var d=await res.json();if(!res.ok)throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.candidates[0].content.parts[0].text;
     }else{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:mime,data:b64}},
-          {type:'text',text:getPrompt()}
-        ]}]})
-      });
-      var d=await res.json();
-      if(!res.ok)throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
+      var d=await res.json();if(!res.ok)throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.content[0].text;
     }
     ss('s1','ok');ss('s2','go');
-    var m=text.match(/\{[\s\S]*\}/);
-    if(!m)throw new Error('JSONが見つかりません');
-    mktData=JSON.parse(m[0]);
-    localStorage.setItem('mktData',JSON.stringify(mktData));
-    ss('s2','ok');
-    updateStatusBar();
-    showPriceView();
-    document.getElementById('wb').style.display='block';
-    document.getElementById('wok').classList.remove('show');
-    document.getElementById('ab').disabled=false;
-    document.getElementById('ab').textContent='📊 再読み取り';
-    calcAll();
-  }catch(err){
-    ss('s1','ng');
-    alert('エラー: '+err.message);
-    document.getElementById('ab').disabled=false;
-    document.getElementById('ab').textContent='📊 画像を読み取る';
-  }
-}
-
-function updateStatusBar(){
-  if(!mktData)return;
-  var dot1=document.getElementById('sdot');
-  var dot2=document.getElementById('sdot2');
-  var txt=mktData.date+'の相場を取得済み';
-  if(dot1){dot1.className='status-dot ok';}
-  if(dot2){dot2.className='status-dot ok';}
-  document.getElementById('stext').textContent=txt;
-  document.getElementById('stext2').textContent=txt;
+    var m=text.match(/\{[\s\S]*\}/);if(!m)throw new Error('JSONが見つかりません');
+    mkt=JSON.parse(m[0]);localStorage.setItem('mkt',JSON.stringify(mkt));
+    ss('s2','ok');updateStatus();
+    document.getElementById('wb').style.display='block';document.getElementById('wok').classList.remove('show');
+    document.getElementById('ab').disabled=false;document.getElementById('ab').textContent='📊 再読み取り';
+  }catch(err){ss('s1','ng');alert('エラー: '+err.message);document.getElementById('ab').disabled=false;document.getElementById('ab').textContent='📊 画像を読み取る';}
 }
 
 function showPriceView(){
-  if(!mktData)return;
-  document.getElementById('pdate').textContent=mktData.date||'';
-  var golds=[['金スポット','gold_spot'],['K24(S)','k24'],['K23','k23'],['K22','k22'],['K21.6','k216'],['K20','k20'],['K18','k18'],['K14','k14'],['K10','k10'],['K9','k9'],['K8','k8'],['K5','k5'],['金歯','kiba']];
-  var pts=[['Pt地金','pt_ig'],['Pt1000','pt1000'],['Pt950','pt950'],['Pt900','pt900'],['Pt850','pt850']];
-  var svs=[['Sv地金','sv_ig'],['Sv1000','sv1000'],['Sv925','sv925'],['SV','sv'],['Pd','pd']];
-  function renderGrid(elId, pairs, cls){
-    var el=document.getElementById(elId);
-    el.innerHTML='';
-    pairs.forEach(function(p){
-      var v=mktData[p[1]];
-      if(v==null)return;
-      el.innerHTML+='<div class="price-item"><div class="pl">'+p[0]+'</div><div class="pv '+cls+'">'+Number(v).toLocaleString()+'</div></div>';
-    });
+  if(!mkt)return;
+  document.getElementById('pdate').textContent=mkt.date||'';
+  function rg(id,pairs,cls){
+    var el=document.getElementById(id);el.innerHTML='';
+    pairs.forEach(function(p){var v=mkt[p[1]];if(v==null)return;el.innerHTML+='<div class="pi-box"><div class="pl">'+p[0]+'</div><div class="pv '+cls+'">'+Number(v).toLocaleString()+'</div></div>';});
   }
-  renderGrid('pg_gold',golds,'gold-v');
-  renderGrid('pg_pt',pts,'pt-v');
-  renderGrid('pg_sv',svs,'sv-v');
-  document.getElementById('priceView').style.display='block';
+  rg('pg_g',[['金スポット','gold_spot'],['K24(S)','k24'],['K23','k23'],['K22','k22'],['K21.6','k216'],['K20','k20'],['K18','k18'],['K14','k14'],['K10','k10'],['K9','k9'],['K8','k8'],['K5','k5'],['金歯','kiba']],'gold-v');
+  rg('pg_p',[['Pt地金','pt_ig'],['Pt1000','pt1000'],['Pt950','pt950'],['Pt900','pt900'],['Pt850','pt850']],'pt-v');
+  rg('pg_s',[['Sv地金','sv_ig'],['Sv1000','sv1000'],['Sv925','sv925'],['SV','sv'],['Pd','pd']],'sv-v');
+  document.getElementById('pv').style.display='block';
 }
 
 async function doWrite(){
-  var url=localStorage.getItem('gu');
-  if(!url)return alert('GAS URLを設定してください');
-  if(!mktData)return;
+  var url=localStorage.getItem('gu');if(!url)return alert('GAS URLを設定してください');if(!mkt)return;
   ss('s3','go');
-  var params=Object.keys(mktData).filter(function(k){return mktData[k]!=null;}).map(function(k){return k+'='+encodeURIComponent(mktData[k]);}).join('&');
-  try{
-    await fetch(url+'?sheet=honbu&'+params,{mode:'no-cors'});
-    ss('s3','ok');
-    document.getElementById('wok').classList.add('show');
-    document.getElementById('wb').style.display='none';
-  }catch(e){
-    ss('s3','ng');
-    alert('書込エラー: '+e.message);
-  }
+  var params=Object.keys(mkt).filter(function(k){return mkt[k]!=null;}).map(function(k){return k+'='+encodeURIComponent(mkt[k]);}).join('&');
+  try{await fetch(url+'?sheet=honbu&'+params,{mode:'no-cors'});ss('s3','ok');document.getElementById('wok').classList.add('show');document.getElementById('wb').style.display='none';}
+  catch(e){ss('s3','ng');alert('書込エラー: '+e.message);}
 }
 
-// ===== 査定計算 =====
-var itemId=0;
-
-function addItem(){
-  var id=itemId++;
-  items.push({id:id,grade:'',weight:0,ishiki:0,saki:0,other:0});
-  renderItems();
+// ===== 査定表 =====
+function addRow(){
+  rows.push({id:rid++,grade:'',w:0,ishi:0,saki:0,other:0});
+  renderTable();
 }
 
-function removeItem(id){
-  items=items.filter(function(x){return x.id!==id;});
-  renderItems();
-  calcAll();
+function clearRows(){
+  rows=[];rid=0;
+  for(var i=0;i<10;i++)addRow();
 }
 
-function clearAll(){
-  items=[];itemId=0;addItem();calcAll();
-}
-
-function gradeOptions(sel){
-  var html='<option value="">-- 品位を選択 --</option>';
+function gradeOpts(sel){
+  var h='<option value="">-</option>';
   GRADES.forEach(function(g){
-    var price=mktData&&mktData[g.k]?Number(mktData[g.k]):0;
-    var label=g.n+(price?' ('+price.toLocaleString()+')':'');
-    html+='<option value="'+g.k+'" '+(sel===g.k?'selected':'')+'>'+(mktData?label:g.n)+'</option>';
+    var p=mkt&&mkt[g.k]?Number(mkt[g.k]):0;
+    h+='<option value="'+g.k+'"'+(sel===g.k?' selected':'')+'>'+g.n+(p?' '+p.toLocaleString():'')+' </option>';
   });
-  return html;
+  return h;
 }
 
-function renderItems(){
-  var el=document.getElementById('assessList');
-  el.innerHTML='';
-  items.forEach(function(item){
-    var price=mktData&&item.grade&&mktData[item.grade]?Number(mktData[item.grade]):0;
-    var jikikin=Math.max(0,(item.weight||0)-(item.ishiki||0));
-    var jikikinMax=Math.round(price*jikikin);
-    var maxVal=Math.max(jikikinMax,item.saki||0,item.other||0);
-    var html='<div class="assess-row" id="ar_'+item.id+'">';
-    html+='<button class="rm" onclick="removeItem('+item.id+')">削除</button>';
-    html+='<div style="margin-bottom:8px"><label>品位</label>';
-    html+='<select onchange="updateItem('+item.id+',\'grade\',this.value)">'+gradeOptions(item.grade)+'</select></div>';
-    html+='<div class="row2">';
-    html+='<div><label>重さ(g)</label><input type="number" step="0.01" value="'+(item.weight||'')+'" placeholder="0.00" onchange="updateItem('+item.id+',\'weight\',this.value)"></div>';
-    html+='<div><label>石引(g)</label><input type="number" step="0.01" value="'+(item.ishiki||'')+'" placeholder="0.00" onchange="updateItem('+item.id+',\'ishiki\',this.value)"></div>';
-    html+='</div>';
-    html+='<div class="row2">';
-    html+='<div><label>先付け</label><input type="number" value="'+(item.saki||'')+'" placeholder="0" onchange="updateItem('+item.id+',\'saki\',this.value)"></div>';
-    html+='<div><label>他社</label><input type="number" value="'+(item.other||'')+'" placeholder="0" onchange="updateItem('+item.id+',\'other\',this.value)"></div>';
-    html+='</div>';
-    html+='<div class="res-box" style="margin-top:8px;margin-bottom:0">';
-    html+='<div class="rr"><span class="rl">地金重量</span><span class="rv">'+jikikin.toFixed(2)+'g</span></div>';
-    html+='<div class="rr"><span class="rl">地金MAX</span><span class="rv gold-v">¥'+jikikinMax.toLocaleString()+'</span></div>';
-    html+='<div class="rr"><span class="rl">MAX</span><span class="rv" style="color:var(--gn);font-size:16px">¥'+maxVal.toLocaleString()+'</span></div>';
-    html+='</div>';
-    html+='</div>';
-    el.innerHTML+=html;
-  });
+function calcRow(r){
+  var p=mkt&&r.grade&&mkt[r.grade]?Number(mkt[r.grade]):0;
+  var jk=Math.max(0,(r.w||0)-(r.ishi||0));
+  var jmax=Math.round(p*jk);
+  var max=Math.max(jmax,r.saki||0,r.other||0);
+  return {p:p,jk:jk,jmax:jmax,max:max};
 }
 
-function updateItem(id,field,val){
-  var item=items.find(function(x){return x.id===id;});
-  if(!item)return;
-  if(field==='grade'){item.grade=val;}
-  else{item[field]=parseFloat(val)||0;}
-  var price=mktData&&item.grade&&mktData[item.grade]?Number(mktData[item.grade]):0;
-  var jikikin=Math.max(0,(item.weight||0)-(item.ishiki||0));
-  var jikikinMax=Math.round(price*jikikin);
-  var maxVal=Math.max(jikikinMax,item.saki||0,item.other||0);
-  var ar=document.getElementById('ar_'+id);
-  if(ar){
-    var rvs=ar.querySelectorAll('.rv');
-    if(rvs[0])rvs[0].textContent=jikikin.toFixed(2)+'g';
-    if(rvs[1])rvs[1].textContent='¥'+jikikinMax.toLocaleString();
-    if(rvs[2])rvs[2].textContent='¥'+maxVal.toLocaleString();
-  }
-  calcAll();
-}
-
-function calcAll(){
+function renderTable(){
+  var tbody=document.getElementById('assessBody');
+  tbody.innerHTML='';
   var total=0;
-  items.forEach(function(item){
-    var price=mktData&&item.grade&&mktData[item.grade]?Number(mktData[item.grade]):0;
-    var jikikin=Math.max(0,(item.weight||0)-(item.ishiki||0));
-    var jikikinMax=Math.round(price*jikikin);
-    var maxVal=Math.max(jikikinMax,item.saki||0,item.other||0);
-    total+=maxVal;
+  rows.forEach(function(r,i){
+    var c=calcRow(r);
+    total+=c.max;
+    var tr=document.createElement('tr');
+    tr.innerHTML=
+      '<td>'+(i+1)+'</td>'+
+      '<td style="min-width:110px"><select onchange="upd('+r.id+',\'grade\',this.value)">'+gradeOpts(r.grade)+'</select></td>'+
+      '<td><input type="number" step="0.01" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:64px"></td>'+
+      '<td><input type="number" step="0.01" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:60px"></td>'+
+      '<td style="color:var(--mu);font-family:monospace">'+c.jk.toFixed(2)+'</td>'+
+      '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
+      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:72px"></td>'+
+      '<td><input type="number" value="'+(r.other||'')+'" placeholder="0" onchange="upd('+r.id+',\'other\',this.value)" style="width:72px"></td>'+
+      '<td class="c-fin">'+c.max.toLocaleString()+'</td>'+
+      '<td><button onclick="delRow('+r.id+')" style="background:var(--rd);color:#fff;border:none;border-radius:4px;padding:3px 7px;cursor:pointer;font-size:11px">✕</button></td>';
+    tbody.appendChild(tr);
   });
   document.getElementById('totalMax').textContent='¥'+total.toLocaleString();
+  document.getElementById('itemCount').textContent=rows.filter(function(r){return r.grade;}).length+'件';
 }
+
+function upd(id,field,val){
+  var r=rows.find(function(x){return x.id===id;});if(!r)return;
+  if(field==='grade')r.grade=val;
+  else r[field]=parseFloat(val)||0;
+  renderTable();
+}
+
+function delRow(id){rows=rows.filter(function(x){return x.id!==id;});renderTable();}
 </script>
 </body>
 </html>
