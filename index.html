@@ -111,7 +111,7 @@ td select:focus,td input:focus{border-color:var(--gold);}
         <tr>
           <th>#</th>
           <th style="min-width:92px">種類</th>
-          <th style="min-width:120px">品位</th>
+          <th style="min-width:120px">品位・品目</th>
           <th style="min-width:56px">重さ(g)</th>
           <th style="min-width:52px">石引(g)</th>
           <th style="min-width:50px">地金(g)</th>
@@ -155,6 +155,18 @@ var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋ�
 var GRADES=[
   {g:'▸金スクラップ'},
   {n:'GDB-IG',       type:'gdb',          base:'gold_spot'},
+  {n:'アサヒ(金)', type:'gdb', base:'gold_spot'},
+  {n:'石福(金)', type:'gdb', base:'gold_spot'},
+  {n:'住友(金)', type:'gdb', base:'gold_spot'},
+  {n:'田中(金)', type:'gdb', base:'gold_spot'},
+  {n:'DOWA(金)', type:'gdb', base:'gold_spot'},
+  {n:'徳力(金)', type:'gdb', base:'gold_spot'},
+  {n:'日鉱HM(金)', type:'gdb', base:'gold_spot'},
+  {n:'日鉱NSS(金)', type:'gdb', base:'gold_spot'},
+  {n:'日本マテリアル(金)', type:'gdb', base:'gold_spot'},
+  {n:'三井(金)', type:'gdb', base:'gold_spot'},
+  {n:'三菱(金)', type:'gdb', base:'gold_spot'},
+
   {n:'K24(IG)他',    type:'normal',        base:'gold_spot'},
   {n:'K24(S)',        type:'normal',        base:'k24'},
   {n:'K23',           type:'normal',        base:'k23'},
@@ -188,16 +200,51 @@ var GRADES=[
   {n:'Pt850喜平',     type:'kihei',         base:'pt850'},
   {g:'▸Ptスクラップ'},
   {n:'Pt1000 GDB',    type:'gdb',           base:'pt_ig'},
+  {n:'アサヒ(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'石福(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'ジャパンE(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'住友(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'田中(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'DOWA(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'徳力(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'日本マテリアル(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'三井(Pt)', type:'gdb', base:'pt_ig'},
+  {n:'三菱(Pt)', type:'gdb', base:'pt_ig'},
+
   {n:'Pt1000(S)',      type:'normal',        base:'pt1000'},
   {n:'Pt950',         type:'normal',        base:'pt950'},
   {n:'Pt900',         type:'normal',        base:'pt900'},
   {n:'Pt850',         type:'normal',        base:'pt850'},
   {g:'▸銀・Pd'},
   {n:'Sv1000 GDB',    type:'gdb',           base:'sv_ig'},
+  {n:'アサヒ(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'石福(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'住友(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'田中(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'中外(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'東邦亜鉛(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'DOWA(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'徳力(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'日鉱HM(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'松田(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'三井EMK(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'三菱(Sv)', type:'gdb', base:'sv_ig'},
+  {n:'横浜金属(Sv)', type:'gdb', base:'sv_ig'},
+
   {n:'Sv1000(S)',      type:'normal',        base:'sv1000'},
   {n:'Sv925',         type:'normal',        base:'sv925'},
   {n:'SV',            type:'normal',        base:'sv'},
   {n:'Pd',            type:'normal',        base:'pd'},
+  {g:'▸Pd GDB'},
+  {n:'アサヒ(Pd)', type:'gdb', base:'pd'},
+  {n:'NEケムキャット(Pd)', type:'gdb', base:'pd'},
+  {n:'ジャパンE(Pd)', type:'gdb', base:'pd'},
+  {n:'照栄化学(Pd)', type:'gdb', base:'pd'},
+  {n:'住友(Pd)', type:'gdb', base:'pd'},
+  {n:'日本マテリアル(Pd)', type:'gdb', base:'pd'},
+  {n:'松田(Pd)', type:'gdb', base:'pd'},
+  {n:'三菱(Pd)', type:'gdb', base:'pd'},
+
   {g:'▸コンビ'},
   {n:'950/K18 1:9',   type:'normal',        base:'c950_19'},
   {n:'950/K18 3:7',   type:'normal',        base:'c950_37'},
@@ -401,8 +448,8 @@ function renderTable(){
         '<select onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:110px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="number" step="0.1" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.1" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" step="0.1" min="0" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
@@ -428,4 +475,4 @@ function upd(id,field,val){
 function delRow(id){ rows=rows.filter(function(x){ return x.id!==id; }); renderTable(); }
 </script>
 </body>
-</html>
+</html>[
