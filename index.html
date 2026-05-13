@@ -73,8 +73,8 @@ td select:focus,td input:focus{border-color:var(--gold);}
 
 <div class="tabs">
   <div class="tab on" onclick="showTab('t1',this)">📷 相場</div>
-  <div class="tab" onclick="showTab('t2',this)">🪙 地金</div>
-  <div class="tab" onclick="showTab('t3',this)">🏷 オークション</div>
+  <div class="tab" onclick="showTab('t2',this)">💎 地金</div>
+  <div class="tab" onclick="showTab('t3',this)">🔨 オークション</div>
   <div class="tab" onclick="showTab('t4',this)">⚙ 設定</div>
 </div>
 
@@ -104,7 +104,9 @@ td select:focus,td input:focus{border-color:var(--gold);}
   <div style="text-align:right;margin-bottom:8px">
     <button onclick="toggleGdb()" style="background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;color:var(--mu);padding:5px 12px;font-size:12px;cursor:pointer" id="gdbBtn">GDB品目を展開 ▼</button>
   </div>
-  <div class="total-bar">
+  <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+    <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="totalCount">0</div></div>
+    <div class="tb-item"><div class="tl">総重量</div><div class="tv" style="color:var(--sv)" id="totalWeight">0g</div></div>
     <div class="tb-item"><div class="tl">合計MAX</div><div class="tv tv-max" id="totalMax">¥0</div></div>
     <div class="tb-item"><div class="tl">買取MAX</div><div class="tv tv-buy" id="totalBuy">¥0</div></div>
     <div class="tb-item"><div class="tl">粗利MAX</div><div class="tv tv-profit" id="totalProfit">¥0</div></div>
@@ -115,14 +117,14 @@ td select:focus,td input:focus{border-color:var(--gold);}
         <tr>
           <th>#</th>
           <th style="min-width:92px">種類</th>
-          <th style="min-width:120px">品位・品目</th>
+          <th style="min-width:100px">品位・品目</th>
           <th style="min-width:56px">重さ(g)</th>
           <th style="min-width:52px">石引(g)</th>
           <th style="min-width:50px">地金(g)</th>
           <th style="min-width:70px">地金MAX</th>
           <th style="min-width:62px">先付け</th>
           <th style="min-width:70px">MAX</th>
-          <th style="min-width:68px">買取</th>
+          <th style="min-width:56px">買取</th>
           <th style="min-width:62px">粗利</th>
           <th></th>
         </tr>
@@ -137,7 +139,8 @@ td select:focus,td input:focus{border-color:var(--gold);}
 </div>
 
 <div class="pg" id="t3">
-  <div class="total-bar">
+  <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr">
+    <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="aucCount">0</div></div>
     <div class="tb-item"><div class="tl">合計MAX</div><div class="tv tv-max" id="aucTotalMax">¥0</div></div>
     <div class="tb-item"><div class="tl">買取合計</div><div class="tv tv-buy" id="aucTotalBuy">¥0</div></div>
     <div class="tb-item"><div class="tl">粗利合計</div><div class="tv tv-profit" id="aucTotalProfit">¥0</div></div>
@@ -147,13 +150,13 @@ td select:focus,td input:focus{border-color:var(--gold);}
       <thead>
         <tr>
           <th>#</th>
-          <th style="min-width:130px">商品メモ</th>
-          <th style="min-width:72px">先付け</th>
-          <th style="min-width:72px">卸先他社①</th>
-          <th style="min-width:72px">卸先他社②</th>
-          <th style="min-width:72px">MAX</th>
-          <th style="min-width:68px">買取</th>
-          <th style="min-width:64px">粗利</th>
+          <th style="min-width:96px">メモ</th>
+          <th style="min-width:58px">先付</th>
+          <th style="min-width:50px;cursor:pointer" onclick="toggleOroshi(1)" id="th_o1" title="クリックで展開">卸①▼</th>
+          <th style="min-width:50px;cursor:pointer" onclick="toggleOroshi(2)" id="th_o2" title="クリックで展開">卸②▼</th>
+          <th style="min-width:58px">MAX</th>
+          <th style="min-width:56px">買取</th>
+          <th style="min-width:52px">粗利</th>
           <th></th>
         </tr>
       </thead>
@@ -164,6 +167,7 @@ td select:focus,td input:focus{border-color:var(--gold);}
     <button class="btn btn-gold" style="flex:1" onclick="addAucRow()">＋ 行追加</button>
     <button class="btn btn-gray" style="flex:1;margin-bottom:8px" onclick="clearAucRows()">🗑 クリア</button>
   </div>
+  <button class="btn btn-gray" onclick="addOroshiCol(1)" id="btn_o1">＋ 卸先追加</button>
 </div>
 
 <div class="pg" id="t4">
@@ -179,7 +183,7 @@ td select:focus,td input:focus{border-color:var(--gold);}
 
 <script>
 var mkt=null, eng=localStorage.getItem('eng')||'gemini', b64=null, mime='image/jpeg';
-var rows=[], rid=0;
+var rows=[], rid=0, jkColOpen=false;
 
 // 種類候補（datalistで直接入力も可）
 var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋﾟｱｽ','ｲﾔﾘﾝｸﾞ','ｶﾌｽ','ﾀｲﾋﾟﾝ','ｺｲﾝ','金歯','ﾆﾌﾞ','IG'];
@@ -188,7 +192,7 @@ var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋ�
 // type: normal/gdb/coin_domestic/coin_foreign/kihei
 var GRADES=[
   {g:'▸金スクラップ'},
-  {n:'オークション品', type:'auction', base:''},
+  {n:'ｵｰｸｼｮﾝ', type:'auction', base:''},
   {n:'GDB-IG',       type:'gdb',          base:'gold_spot'},
   {n:'アサヒ(金)', type:'gdb', base:'gold_spot'},
   {n:'石福(金)', type:'gdb', base:'gold_spot'},
@@ -428,6 +432,16 @@ async function doWrite(){
 }
 
 // ===== 査定表 =====
+
+function toggleJkCol(){
+  jkColOpen=!jkColOpen;
+  var th1=document.getElementById('th_ishi');
+  var th2=document.getElementById('th_jk');
+  if(th1) th1.textContent=jkColOpen?'石引▲':'石引▼';
+  if(th2) th2.textContent=jkColOpen?'地金▲':'地金▼';
+  renderTable();
+}
+
 function addRow(){ rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0}); renderTable(); }
 function clearRows(){ rows=[]; rid=0; for(var i=0;i<10;i++) addRow();
   for(var i=0;i<10;i++) addAucRow(); }
@@ -500,16 +514,16 @@ function renderTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td>'+
-        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" style="width:90px">'+
+        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" style="width:74px">'+
         '<datalist id="'+dlId+'">'+TYPES.map(function(t){return '<option value="'+t+'">';}).join('')+'</datalist>'+
       '</td>'+
       '<td>'+
-        '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:110px">'+gradeOpts(r.grade)+'</select>'+
+        '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:98px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
       '<td><input type="number" step="0.1" min="0" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
-      '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
+      (jkColOpen?'<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>':'<td style="color:var(--mu);font-size:10px">'+(r.ishi||'-')+'</td>')+
+      (jkColOpen?'<td class="c-jk">'+c.jk.toFixed(1)+'g</td>':'<td style="color:var(--mu);font-size:10px">'+c.jk.toFixed(1)+'g</td>')+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
@@ -521,6 +535,9 @@ function renderTable(){
   document.getElementById('totalMax').textContent='¥'+tMax.toLocaleString();
   document.getElementById('totalBuy').textContent='¥'+tBuy.toLocaleString();
   document.getElementById('totalProfit').textContent='¥'+tProfit.toLocaleString();
+  var tW=rows.reduce(function(s,r){return s+(r.w||0);},0);
+  var el=document.getElementById('totalWeight'); if(el) el.textContent=tW.toFixed(1)+'g';
+  var tC=rows.filter(function(r){return r.grade;}).length; var elC=document.getElementById('totalCount'); if(elC) elC.textContent=tC+'件';
 }
 
 function upd(id,field,val){
@@ -534,29 +551,40 @@ function upd(id,field,val){
 function delRow(id){ rows=rows.filter(function(x){ return x.id!==id; }); renderTable(); }
 
 // ===== オークション =====
-var aucRows=[], aucRid=0;
+var aucRows=[], aucRid=0, oroshi1Open=false, oroshi1Added=false;
 
-function addAucRow(){ aucRows.push({id:aucRid++,memo:'',saki:0,oroshi1:0,oroshi2:0,buy:0}); renderAucTable(); }
+function addAucRow(){ aucRows.push({id:aucRid++,memo:'',saki:0,oroshi1:0,buy:0}); renderAucTable(); }
 function clearAucRows(){ aucRows=[]; aucRid=0; for(var i=0;i<10;i++) addAucRow(); }
 
 function renderAucTable(){
   var tbody=document.getElementById('aucBody');
   if(!tbody) return;
   tbody.innerHTML='';
+  // ヘッダー動的生成
+  var thead=document.getElementById('aucThead');
+  if(thead){
+    var htr='<tr><th>#</th><th style="min-width:96px">メモ</th><th style="min-width:58px">先付</th>';
+    if(oroshi1Added) htr+='<th style="min-width:50px;cursor:pointer" onclick="toggleOroshi(1)" id="th_o1">'+(oroshi1Open?'卸▲':'卸▼')+'</th>';
+    htr+='<th style="min-width:58px">MAX</th><th style="min-width:56px">買取</th><th style="min-width:52px">粗利</th><th></th></tr>';
+    thead.innerHTML=htr;
+  }
   var tMax=0,tBuy=0,tProfit=0;
   aucRows.forEach(function(r,i){
-    var max=Math.max(r.saki||0,r.oroshi1||0,r.oroshi2||0);
+    var max=Math.max(r.saki||0,(oroshi1Added?r.oroshi1||0:0));
     var profit=max-(r.buy||0);
     tMax+=max; tBuy+=r.buy||0; tProfit+=profit;
     var pStyle=profit<0?' style="color:var(--rd)"':'';
     var tr=document.createElement('tr');
     var rid=r.id;
+    var o1cell=!oroshi1Added?'':oroshi1Open
+      ? '<td><input type="number" value="'+(r.oroshi1||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi1\',this.value)" style="width:68px"></td>'
+      : '<td style="color:var(--mu);font-size:11px">'+(r.oroshi1?r.oroshi1.toLocaleString():'-')+'</td>';
+
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td><input type="text" value="'+(r.memo||'')+'" placeholder="商品メモ" onchange="updAuc('+rid+',\'memo\',this.value)" style="width:120px"></td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="updAuc('+rid+',\'saki\',this.value)" style="width:68px"></td>'+
-      '<td><input type="number" value="'+(r.oroshi1||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi1\',this.value)" style="width:68px"></td>'+
-      '<td><input type="number" value="'+(r.oroshi2||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi2\',this.value)" style="width:68px"></td>'+
+      (oroshi1Added?o1cell:'')+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="updAuc('+rid+',\'buy\',this.value)" style="width:64px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
@@ -567,6 +595,24 @@ function renderAucTable(){
   el=document.getElementById('aucTotalMax'); if(el) el.textContent='¥'+tMax.toLocaleString();
   el=document.getElementById('aucTotalBuy'); if(el) el.textContent='¥'+tBuy.toLocaleString();
   el=document.getElementById('aucTotalProfit'); if(el) el.textContent='¥'+tProfit.toLocaleString();
+  var aC=aucRows.filter(function(r){return r.memo||r.saki;}).length; el=document.getElementById('aucCount'); if(el) el.textContent=aC+'件';
+}
+
+
+
+function addOroshiCol(num){
+  oroshi1Added=!oroshi1Added;
+  if(!oroshi1Added) oroshi1Open=false;
+  var btn=document.getElementById('btn_o1');
+  if(btn) btn.textContent=oroshi1Added?'卸先 非表示':'＋ 卸先追加';
+  renderAucTable();
+}
+
+function toggleOroshi(num){
+  oroshi1Open=!oroshi1Open;
+  var th=document.getElementById('th_o1');
+  if(th) th.textContent=oroshi1Open?'卸▲':'卸▼';
+  renderAucTable();
 }
 
 function updAuc(id,field,val){
