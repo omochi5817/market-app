@@ -347,11 +347,21 @@ async function doWrite(){
 function addRow(){ rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0}); renderTable(); }
 function clearRows(){ rows=[]; rid=0; for(var i=0;i<10;i++) addRow(); }
 
+function getDisplayPrice(g){
+  if(!mkt||!g.base||!mkt[g.base]) return 0;
+  var base=Number(mkt[g.base]);
+  if(g.type==='gdb') return base; // 重さ依存なので基本値表示
+  if(g.type==='coin_domestic') return Math.floor(base*0.97);
+  if(g.type==='coin_foreign') return base;
+  if(g.type==='kihei') return base+100;
+  return base;
+}
+
 function gradeOpts(sel){
   var h='<option value="">-- 品位 --</option>';
   GRADES.forEach(function(g){
     if(g.g){ h+='<option disabled style="color:var(--gold);font-size:10px">'+g.g+'</option>'; return; }
-    var p=mkt&&g.base&&mkt[g.base] ? Number(mkt[g.base]) : 0;
+    var p=getDisplayPrice(g);
     var label=g.n+(p?' '+p.toLocaleString():'');
     h+='<option value="'+g.n+'"'+(sel===g.n?' selected':'')+'>'+label+'</option>';
   });
