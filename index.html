@@ -110,7 +110,7 @@ td select:focus,td input:focus{border-color:var(--gold);}
       <thead>
         <tr>
           <th>#</th>
-          <th style="min-width:74px">種類</th>
+          <th style="min-width:92px">種類</th>
           <th style="min-width:120px">品位</th>
           <th style="min-width:56px">重さ(g)</th>
           <th style="min-width:52px">石引(g)</th>
@@ -394,15 +394,15 @@ function renderTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td>'+
-        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" oninput="upd('+r.id+',\'type\',this.value)" style="width:70px">'+
+        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" oninput="upd('+r.id+',\'type\',this.value)" style="width:90px">'+
         '<datalist id="'+dlId+'">'+TYPES.map(function(t){return '<option value="'+t+'">';}).join('')+'</datalist>'+
       '</td>'+
       '<td>'+
         '<select onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:110px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="number" step="0.01" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.01" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" step="0.1" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" step="0.1" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
