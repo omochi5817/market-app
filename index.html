@@ -15,42 +15,32 @@ body{background:var(--bg);color:var(--tx);font-family:sans-serif;min-height:100v
 .tab.on{color:var(--gold);border-bottom-color:var(--gold);}
 .pg{display:none;padding:12px;}
 .pg.on{display:block;}
-/* 合計バー */
 .total-bar{background:rgba(201,168,76,.1);border:1px solid var(--bdr);border-radius:var(--r);padding:10px 12px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
 .tb-item{text-align:center;}
 .tb-item .tl{font-size:10px;color:var(--mu);margin-bottom:2px;}
 .tb-item .tv{font-size:16px;font-weight:700;font-family:monospace;}
-.tv-max{color:var(--gold);}
-.tv-buy{color:var(--gn);}
-.tv-profit{color:var(--pt);}
-/* 表 */
+.tv-max{color:var(--gold);}.tv-buy{color:var(--gn);}.tv-profit{color:var(--pt);}
 .tbl-wrap{overflow-x:auto;margin-bottom:10px;border-radius:var(--r);border:1px solid var(--bdr);}
 table{border-collapse:collapse;min-width:100%;}
 thead tr{background:var(--sur2);}
 thead th{padding:7px 4px;font-size:10px;color:var(--mu);white-space:nowrap;border-bottom:2px solid var(--bdr);text-align:center;}
-thead th.h-type{min-width:80px;}
-thead th.h-grade{min-width:110px;}
-thead th.h-num{min-width:58px;}
-thead th.h-res{min-width:72px;}
 tbody tr{border-bottom:1px solid var(--bdr);}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
 tbody td{padding:5px 3px;text-align:center;font-size:12px;vertical-align:middle;}
 tbody td:first-child{color:var(--mu);font-size:10px;padding:5px 6px;}
-td select,td input[type=number]{background:var(--bg);border:1px solid var(--bdr);border-radius:5px;color:var(--tx);padding:5px 3px;font-size:12px;width:100%;text-align:center;outline:none;}
+td select,td input[type=number],td input[type=text]{background:var(--bg);border:1px solid var(--bdr);border-radius:5px;color:var(--tx);padding:5px 3px;font-size:12px;width:100%;text-align:center;outline:none;}
 td select:focus,td input:focus{border-color:var(--gold);}
 .c-jk{color:var(--mu);font-family:monospace;font-size:11px;}
 .c-max{color:var(--gold);font-weight:700;font-family:monospace;}
-.c-buy{color:var(--gn);font-weight:700;font-family:monospace;}
 .c-profit{color:var(--pt);font-family:monospace;font-size:11px;}
+.c-note{color:var(--rd);font-size:10px;margin-top:2px;}
 .del-btn{background:rgba(224,85,85,.15);color:var(--rd);border:1px solid rgba(224,85,85,.3);border-radius:4px;padding:3px 6px;cursor:pointer;font-size:11px;}
-/* ボタン */
 .btn{border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;}
 .btn-gold{background:var(--gold);color:#000;width:100%;}
 .btn-gray{background:var(--sur2);color:var(--mu);border:1px solid var(--bdr);width:100%;}
 .btn-green{background:var(--gn);color:#fff;width:100%;}
 .btn:disabled{opacity:.4;}
-/* 相場タブ */
 .card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;margin-bottom:10px;}
 .card h3{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
 .pg_grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
@@ -72,7 +62,6 @@ td select:focus,td input:focus{border-color:var(--gold);}
 .sdot.ok{background:var(--gn);}
 .ok-msg{background:rgba(76,175,125,.1);border:1px solid var(--gn);border-radius:var(--r);padding:12px;text-align:center;display:none;margin-bottom:10px;color:var(--gn);font-weight:700;font-size:13px;}
 .ok-msg.show{display:block;}
-/* 設定 */
 .fp label{display:block;font-size:11px;color:var(--mu);margin-bottom:3px;text-transform:uppercase;}
 .fp input{width:100%;background:var(--bg);border:1px solid var(--bdr);border-radius:7px;color:var(--tx);padding:9px 10px;font-size:13px;margin-bottom:9px;outline:none;}
 .eng{display:flex;gap:7px;margin-bottom:10px;}
@@ -88,7 +77,6 @@ td select:focus,td input:focus{border-color:var(--gold);}
   <div class="tab" onclick="showTab('t3',this)">⚙ 設定</div>
 </div>
 
-<!-- TAB1 相場取得 -->
 <div class="pg on" id="t1">
   <div class="sbar"><div class="sdot" id="sd1"></div><span id="st1">相場未取得</span></div>
   <div class="upload" id="ua"><input type="file" accept="image/*" onchange="onFile(event)">
@@ -110,7 +98,6 @@ td select:focus,td input:focus{border-color:var(--gold);}
   </div>
 </div>
 
-<!-- TAB2 査定計算 -->
 <div class="pg" id="t2">
   <div class="sbar"><div class="sdot" id="sd2"></div><span id="st2">相場未取得</span></div>
   <div class="total-bar">
@@ -119,20 +106,20 @@ td select:focus,td input:focus{border-color:var(--gold);}
     <div class="tb-item"><div class="tl">粗利MAX</div><div class="tv tv-profit" id="totalProfit">¥0</div></div>
   </div>
   <div class="tbl-wrap">
-    <table id="at">
+    <table>
       <thead>
         <tr>
           <th>#</th>
-          <th class="h-type">種類</th>
-          <th class="h-grade">品位</th>
-          <th class="h-num">重さ(g)</th>
-          <th class="h-num">石引(g)</th>
-          <th class="h-num">地金(g)</th>
-          <th class="h-res">地金MAX</th>
-          <th class="h-num">先付け</th>
-          <th class="h-res">MAX</th>
-          <th class="h-res">買取</th>
-          <th class="h-res">粗利</th>
+          <th style="min-width:74px">種類</th>
+          <th style="min-width:120px">品位</th>
+          <th style="min-width:56px">重さ(g)</th>
+          <th style="min-width:52px">石引(g)</th>
+          <th style="min-width:50px">地金(g)</th>
+          <th style="min-width:70px">地金MAX</th>
+          <th style="min-width:62px">先付け</th>
+          <th style="min-width:70px">MAX</th>
+          <th style="min-width:68px">買取</th>
+          <th style="min-width:62px">粗利</th>
           <th></th>
         </tr>
       </thead>
@@ -145,7 +132,6 @@ td select:focus,td input:focus{border-color:var(--gold);}
   </div>
 </div>
 
-<!-- TAB3 設定 -->
 <div class="pg" id="t3">
   <div class="card fp">
     <h3>AIエンジン</h3>
@@ -158,24 +144,107 @@ td select:focus,td input:focus{border-color:var(--gold);}
 </div>
 
 <script>
-var mkt=null,eng=localStorage.getItem('eng')||'gemini',b64=null,mime='image/jpeg';
-var rows=[],rid=0;
+var mkt=null, eng=localStorage.getItem('eng')||'gemini', b64=null, mime='image/jpeg';
+var rows=[], rid=0;
 
-var TYPES=['','ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋﾟｱｽ','ｲﾔﾘﾝｸﾞ','ｶﾌｽ','ﾀｲﾋﾟﾝ','ｺｲﾝ'];
+// 種類候補（datalistで直接入力も可）
+var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋﾟｱｽ','ｲﾔﾘﾝｸﾞ','ｶﾌｽ','ﾀｲﾋﾟﾝ','ｺｲﾝ','金歯','ﾆﾌﾞ','IG'];
 
+// 品位定義
+// type: normal/gdb/coin_domestic/coin_foreign/kihei
 var GRADES=[
-  {n:'K24(IG)',k:'gold_spot'},{n:'K24(S)',k:'k24'},{n:'K23',k:'k23'},{n:'K22',k:'k22'},
-  {n:'K21.6',k:'k216'},{n:'K20',k:'k20'},{n:'K18',k:'k18'},{n:'K18WG',k:'k18'},
-  {n:'K14',k:'k14'},{n:'K14WG',k:'k14'},{n:'K10',k:'k10'},{n:'K9',k:'k9'},
-  {n:'K8',k:'k8'},{n:'K5',k:'k5'},{n:'金歯',k:'kiba'},
-  {n:'Pt1000(IG)',k:'pt_ig'},{n:'Pt1000(S)',k:'pt1000'},{n:'Pt950',k:'pt950'},
-  {n:'Pt900',k:'pt900'},{n:'Pt850',k:'pt850'},
-  {n:'Sv1000(IG)',k:'sv_ig'},{n:'Sv1000(S)',k:'sv1000'},{n:'Sv925',k:'sv925'},{n:'SV',k:'sv'},{n:'Pd',k:'pd'},
-  {n:'950/K18 1:9',k:'c950_19'},{n:'950/K18 3:7',k:'c950_37'},{n:'950/K18 5:5',k:'c950_55'},{n:'950/K18 7:3',k:'c950_73'},{n:'950/K18 9:1',k:'c950_91'},
-  {n:'900/K18 1:9',k:'c900_19'},{n:'900/K18 3:7',k:'c900_37'},{n:'900/K18 5:5',k:'c900_55'},{n:'900/K18 7:3',k:'c900_73'},{n:'900/K18 9:1',k:'c900_91'},
-  {n:'850/K18 1:9',k:'c850_19'},{n:'850/K18 3:7',k:'c850_37'},{n:'850/K18 5:5',k:'c850_55'},{n:'850/K18 7:3',k:'c850_73'},{n:'850/K18 9:1',k:'c850_91'},
-  {n:'SV/K18',k:'sv_k18'},{n:'SV/K14',k:'sv_k14'},{n:'SV/K10',k:'sv_k10'}
+  {g:'▸金スクラップ'},
+  {n:'GDB-IG',       type:'gdb',          base:'gold_spot'},
+  {n:'K24(IG)他',    type:'normal',        base:'gold_spot'},
+  {n:'K24(S)',        type:'normal',        base:'k24'},
+  {n:'K23',           type:'normal',        base:'k23'},
+  {n:'K22',           type:'normal',        base:'k22'},
+  {n:'K21.6',         type:'normal',        base:'k216'},
+  {n:'K20',           type:'normal',        base:'k20'},
+  {n:'K18',           type:'normal',        base:'k18'},
+  {n:'K18WG',         type:'normal',        base:'k18'},
+  {n:'K14',           type:'normal',        base:'k14'},
+  {n:'K14WG',         type:'normal',        base:'k14'},
+  {n:'K10',           type:'normal',        base:'k10'},
+  {n:'K9',            type:'normal',        base:'k9'},
+  {n:'K8',            type:'normal',        base:'k8'},
+  {n:'K5',            type:'normal',        base:'k5'},
+  {n:'金歯',          type:'normal',        base:'kiba'},
+  {g:'▸国内金貨'},
+  {n:'国内金貨',      type:'coin_domestic', base:'gold_spot'},
+  {g:'▸海外コイン'},
+  {n:'メープル',      type:'coin_foreign',  base:'gold_spot'},
+  {n:'ナゲット',      type:'coin_foreign',  base:'gold_spot'},
+  {n:'干支(日中豪)',  type:'coin_foreign',  base:'gold_spot'},
+  {n:'カンガルー',    type:'coin_foreign',  base:'gold_spot'},
+  {n:'ハーモニー',    type:'coin_foreign',  base:'gold_spot'},
+  {n:'キャット',      type:'coin_foreign',  base:'gold_spot'},
+  {n:'他純金コイン',  type:'normal',        base:'k24'},
+  {g:'▸喜平(四面W中留)'},
+  {n:'K24喜平',       type:'kihei',         base:'k24'},
+  {n:'K18喜平',       type:'kihei',         base:'k18'},
+  {n:'Pt950喜平',     type:'kihei',         base:'pt950'},
+  {n:'Pt900喜平',     type:'kihei',         base:'pt900'},
+  {n:'Pt850喜平',     type:'kihei',         base:'pt850'},
+  {g:'▸Ptスクラップ'},
+  {n:'Pt1000 GDB',    type:'gdb',           base:'pt_ig'},
+  {n:'Pt1000(S)',      type:'normal',        base:'pt1000'},
+  {n:'Pt950',         type:'normal',        base:'pt950'},
+  {n:'Pt900',         type:'normal',        base:'pt900'},
+  {n:'Pt850',         type:'normal',        base:'pt850'},
+  {g:'▸銀・Pd'},
+  {n:'Sv1000 GDB',    type:'gdb',           base:'sv_ig'},
+  {n:'Sv1000(S)',      type:'normal',        base:'sv1000'},
+  {n:'Sv925',         type:'normal',        base:'sv925'},
+  {n:'SV',            type:'normal',        base:'sv'},
+  {n:'Pd',            type:'normal',        base:'pd'},
+  {g:'▸コンビ'},
+  {n:'950/K18 1:9',   type:'normal',        base:'c950_19'},
+  {n:'950/K18 3:7',   type:'normal',        base:'c950_37'},
+  {n:'950/K18 5:5',   type:'normal',        base:'c950_55'},
+  {n:'950/K18 7:3',   type:'normal',        base:'c950_73'},
+  {n:'950/K18 9:1',   type:'normal',        base:'c950_91'},
+  {n:'900/K18 1:9',   type:'normal',        base:'c900_19'},
+  {n:'900/K18 3:7',   type:'normal',        base:'c900_37'},
+  {n:'900/K18 5:5',   type:'normal',        base:'c900_55'},
+  {n:'900/K18 7:3',   type:'normal',        base:'c900_73'},
+  {n:'900/K18 9:1',   type:'normal',        base:'c900_91'},
+  {n:'850/K18 1:9',   type:'normal',        base:'c850_19'},
+  {n:'850/K18 3:7',   type:'normal',        base:'c850_37'},
+  {n:'850/K18 5:5',   type:'normal',        base:'c850_55'},
+  {n:'850/K18 7:3',   type:'normal',        base:'c850_73'},
+  {n:'850/K18 9:1',   type:'normal',        base:'c850_91'},
+  {n:'SV/K18',        type:'normal',        base:'sv_k18'},
+  {n:'SV/K14',        type:'normal',        base:'sv_k14'},
+  {n:'SV/K10',        type:'normal',        base:'sv_k10'}
 ];
+
+function getUnitPrice(gradeName, weight) {
+  if (!mkt || !gradeName) return 0;
+  var g = GRADES.find(function(x){ return !x.g && x.n===gradeName; });
+  if (!g) return 0;
+  var base = mkt[g.base] ? Number(mkt[g.base]) : 0;
+  if (g.type==='gdb') {
+    if (weight < 5) return mkt['k24'] ? Number(mkt['k24']) : 0;
+    if (weight >= 200) return Math.max(0, base-100);
+    return base;
+  }
+  if (g.type==='coin_domestic') return Math.floor(base * 0.97);
+  if (g.type==='coin_foreign') return base;
+  if (g.type==='kihei') return base + 100;
+  return base;
+}
+
+function getNote(gradeName, weight) {
+  if (!gradeName) return '';
+  var g = GRADES.find(function(x){ return !x.g && x.n===gradeName; });
+  if (!g) return '';
+  if (g.type==='gdb' && weight < 5) return '5g未満→S';
+  if (g.type==='gdb' && weight >= 200) return '200g以上-100';
+  if (g.type==='coin_domestic') return 'floor(IG×0.97)';
+  if (g.type==='kihei') return 'IG+100';
+  return '';
+}
 
 window.onload=function(){
   document.getElementById('gk').value=localStorage.getItem('gk')||'';
@@ -183,76 +252,80 @@ window.onload=function(){
   document.getElementById('gu').value=localStorage.getItem('gu')||'';
   setEng(eng);
   var s=localStorage.getItem('mkt');
-  if(s){mkt=JSON.parse(s);updateStatus();}
-  for(var i=0;i<10;i++)addRow();
+  if(s){ mkt=JSON.parse(s); updateStatus(); }
+  for(var i=0;i<10;i++) addRow();
 };
 
 function showTab(id,el){
   document.querySelectorAll('.pg').forEach(function(e){e.classList.remove('on');});
   document.querySelectorAll('.tab').forEach(function(e){e.classList.remove('on');});
-  document.getElementById(id).classList.add('on');el.classList.add('on');
-  if(id==='t2')renderTable();
+  document.getElementById(id).classList.add('on'); el.classList.add('on');
+  if(id==='t2') renderTable();
 }
 
-function setEng(e){eng=e;localStorage.setItem('eng',e);document.getElementById('bg').className=e==='gemini'?'on':'';document.getElementById('bc').className=e==='claude'?'on':'';}
-function save(){localStorage.setItem('gk',document.getElementById('gk').value.trim());localStorage.setItem('ck',document.getElementById('ck').value.trim());localStorage.setItem('gu',document.getElementById('gu').value.trim());alert('保存しました');}
+function setEng(e){ eng=e; localStorage.setItem('eng',e); document.getElementById('bg').className=e==='gemini'?'on':''; document.getElementById('bc').className=e==='claude'?'on':''; }
+function save(){ localStorage.setItem('gk',document.getElementById('gk').value.trim()); localStorage.setItem('ck',document.getElementById('ck').value.trim()); localStorage.setItem('gu',document.getElementById('gu').value.trim()); alert('保存しました'); }
 
 function updateStatus(){
-  if(!mkt)return;
+  if(!mkt) return;
   var txt=(mkt.date||'')+'の相場取得済み';
-  ['sd1','sd2'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='sdot ok';});
-  ['st1','st2'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=txt;});
-  showPriceView();renderTable();
+  ['sd1','sd2'].forEach(function(id){ var el=document.getElementById(id); if(el) el.className='sdot ok'; });
+  ['st1','st2'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=txt; });
+  showPriceView();
+  renderTable();
 }
 
 function onFile(e){
-  var f=e.target.files[0];if(!f)return;
+  var f=e.target.files[0]; if(!f) return;
   var r=new FileReader();
   r.onload=function(ev){
-    b64=ev.target.result.split(',')[1];mime=f.type||'image/jpeg';
-    document.getElementById('pi').src=ev.target.result;document.getElementById('pi').style.display='block';
-    document.getElementById('uc').style.display='none';document.getElementById('ua').className='upload has-img';
+    b64=ev.target.result.split(',')[1]; mime=f.type||'image/jpeg';
+    document.getElementById('pi').src=ev.target.result; document.getElementById('pi').style.display='block';
+    document.getElementById('uc').style.display='none'; document.getElementById('ua').className='upload has-img';
     document.getElementById('ab').disabled=false;
   };
   r.readAsDataURL(f);
 }
 
-function ss(id,cls){document.getElementById(id).className='step '+cls;}
-function getPrompt(){return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10';}
+function ss(id,cls){ document.getElementById(id).className='step '+cls; }
+function getPrompt(){ return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10'; }
 
 async function doAnalyze(){
   var key=localStorage.getItem(eng==='gemini'?'gk':'ck');
-  if(!key)return alert('APIキーを設定してください');
-  if(!b64)return alert('画像を選択してください');
-  document.getElementById('ab').disabled=true;document.getElementById('ab').textContent='解析中...';
-  document.getElementById('st').classList.add('show');document.getElementById('pv').style.display='none';
-  ss('s1','go');ss('s2','');ss('s3','');
+  if(!key) return alert('APIキーを設定してください');
+  if(!b64) return alert('画像を選択してください');
+  document.getElementById('ab').disabled=true; document.getElementById('ab').textContent='解析中...';
+  document.getElementById('st').classList.add('show'); document.getElementById('pv').style.display='none';
+  ss('s1','go'); ss('s2',''); ss('s3','');
   try{
     var text;
     if(eng==='gemini'){
       var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})});
-      var d=await res.json();if(!res.ok)throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      var d=await res.json(); if(!res.ok) throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.candidates[0].content.parts[0].text;
     }else{
       var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
-      var d=await res.json();if(!res.ok)throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      var d=await res.json(); if(!res.ok) throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
       text=d.content[0].text;
     }
-    ss('s1','ok');ss('s2','go');
-    var m=text.match(/\{[\s\S]*\}/);if(!m)throw new Error('JSONが見つかりません');
-    mkt=JSON.parse(m[0]);localStorage.setItem('mkt',JSON.stringify(mkt));
-    ss('s2','ok');updateStatus();
-    document.getElementById('wb').style.display='block';document.getElementById('wok').classList.remove('show');
-    document.getElementById('ab').disabled=false;document.getElementById('ab').textContent='📊 再読み取り';
-  }catch(err){ss('s1','ng');alert('エラー: '+err.message);document.getElementById('ab').disabled=false;document.getElementById('ab').textContent='📊 画像を読み取る';}
+    ss('s1','ok'); ss('s2','go');
+    var m=text.match(/\{[\s\S]*\}/); if(!m) throw new Error('JSONが見つかりません');
+    mkt=JSON.parse(m[0]); localStorage.setItem('mkt',JSON.stringify(mkt));
+    ss('s2','ok'); updateStatus();
+    document.getElementById('wb').style.display='block'; document.getElementById('wok').classList.remove('show');
+    document.getElementById('ab').disabled=false; document.getElementById('ab').textContent='📊 再読み取り';
+  }catch(err){
+    ss('s1','ng'); alert('エラー: '+err.message);
+    document.getElementById('ab').disabled=false; document.getElementById('ab').textContent='📊 画像を読み取る';
+  }
 }
 
 function showPriceView(){
-  if(!mkt)return;
+  if(!mkt) return;
   document.getElementById('pdate').textContent=mkt.date||'';
   function rg(id,pairs,cls){
-    var el=document.getElementById(id);el.innerHTML='';
-    pairs.forEach(function(p){var v=mkt[p[1]];if(v==null)return;el.innerHTML+='<div class="pi-box"><div class="pl">'+p[0]+'</div><div class="pv '+cls+'">'+Number(v).toLocaleString()+'</div></div>';});
+    var el=document.getElementById(id); el.innerHTML='';
+    pairs.forEach(function(p){ var v=mkt[p[1]]; if(v==null) return; el.innerHTML+='<div class="pi-box"><div class="pl">'+p[0]+'</div><div class="pv '+cls+'">'+Number(v).toLocaleString()+'</div></div>'; });
   }
   rg('pg_g',[['金スポット','gold_spot'],['K24(S)','k24'],['K23','k23'],['K22','k22'],['K21.6','k216'],['K20','k20'],['K18','k18'],['K14','k14'],['K10','k10'],['K9','k9'],['K8','k8'],['K5','k5'],['金歯','kiba']],'gold-v');
   rg('pg_p',[['Pt地金','pt_ig'],['Pt1000','pt1000'],['Pt950','pt950'],['Pt900','pt900'],['Pt850','pt850']],'pt-v');
@@ -261,60 +334,71 @@ function showPriceView(){
 }
 
 async function doWrite(){
-  var url=localStorage.getItem('gu');if(!url)return alert('GAS URLを設定してください');if(!mkt)return;
+  var url=localStorage.getItem('gu'); if(!url) return alert('GAS URLを設定してください'); if(!mkt) return;
   ss('s3','go');
-  var params=Object.keys(mkt).filter(function(k){return mkt[k]!=null;}).map(function(k){return k+'='+encodeURIComponent(mkt[k]);}).join('&');
-  try{await fetch(url+'?sheet=honbu&'+params,{mode:'no-cors'});ss('s3','ok');document.getElementById('wok').classList.add('show');document.getElementById('wb').style.display='none';}
-  catch(e){ss('s3','ng');alert('書込エラー: '+e.message);}
+  var params=Object.keys(mkt).filter(function(k){ return mkt[k]!=null; }).map(function(k){ return k+'='+encodeURIComponent(mkt[k]); }).join('&');
+  try{
+    await fetch(url+'?sheet=honbu&'+params,{mode:'no-cors'});
+    ss('s3','ok'); document.getElementById('wok').classList.add('show'); document.getElementById('wb').style.display='none';
+  }catch(e){ ss('s3','ng'); alert('書込エラー: '+e.message); }
 }
 
 // ===== 査定表 =====
-function addRow(){rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0});renderTable();}
-
-function clearRows(){rows=[];rid=0;for(var i=0;i<10;i++)addRow();}
-
-function typeOpts(sel){
-  return TYPES.map(function(t){return '<option value="'+t+'"'+(sel===t?' selected':'')+'>'+(t||'--')+'</option>';}).join('');
-}
+function addRow(){ rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0}); renderTable(); }
+function clearRows(){ rows=[]; rid=0; for(var i=0;i<10;i++) addRow(); }
 
 function gradeOpts(sel){
-  var h='<option value="">-</option>';
+  var h='<option value="">-- 品位 --</option>';
   GRADES.forEach(function(g){
-    var p=mkt&&mkt[g.k]?Number(mkt[g.k]):0;
-    h+='<option value="'+g.k+'"'+(sel===g.k?' selected':'')+'>'+g.n+(p?' '+p.toLocaleString():'')+' </option>';
+    if(g.g){ h+='<option disabled style="color:var(--gold);font-size:10px">'+g.g+'</option>'; return; }
+    var p=mkt&&g.base&&mkt[g.base] ? Number(mkt[g.base]) : 0;
+    var label=g.n+(p?' '+p.toLocaleString():'');
+    h+='<option value="'+g.n+'"'+(sel===g.n?' selected':'')+'>'+label+'</option>';
   });
   return h;
 }
 
 function calcRow(r){
-  var p=mkt&&r.grade&&mkt[r.grade]?Number(mkt[r.grade]):0;
-  var jk=Math.max(0,(r.w||0)-(r.ishi||0));
-  var jmax=Math.round(p*jk);
-  var max=Math.max(jmax,r.saki||0);
+  var w=r.w||0;
+  var jk=Math.max(0, w-(r.ishi||0));
+  var unit=getUnitPrice(r.grade, w);
+  var jmax=Math.round(unit*jk);
+  var max=Math.max(jmax, r.saki||0);
   var profit=max-(r.buy||0);
-  return {p:p,jk:jk,jmax:jmax,max:max,profit:profit};
+  var note=getNote(r.grade, w);
+  return {jk:jk, jmax:jmax, max:max, profit:profit, note:note};
 }
 
 function renderTable(){
   var tbody=document.getElementById('ab2');
+  if(!tbody) return;
   tbody.innerHTML='';
-  var tMax=0,tBuy=0,tProfit=0;
+  var tMax=0, tBuy=0, tProfit=0;
   rows.forEach(function(r,i){
     var c=calcRow(r);
-    tMax+=c.max;tBuy+=r.buy||0;tProfit+=c.profit;
+    tMax+=c.max; tBuy+=r.buy||0; tProfit+=c.profit;
     var tr=document.createElement('tr');
+    var pStyle=c.profit<0?' style="color:var(--rd)"':'';
+    // datalist id per row
+    var dlId='dl_'+r.id;
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
-      '<td class="h-type"><select onchange="upd('+r.id+',\'type\',this.value)">'+typeOpts(r.type)+'</select></td>'+
-      '<td class="h-grade"><select onchange="upd('+r.id+',\'grade\',this.value)">'+gradeOpts(r.grade)+'</select></td>'+
-      '<td><input type="number" step="0.01" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:58px"></td>'+
-      '<td><input type="number" step="0.01" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:54px"></td>'+
+      '<td>'+
+        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" oninput="upd('+r.id+',\'type\',this.value)" style="width:70px">'+
+        '<datalist id="'+dlId+'">'+TYPES.map(function(t){return '<option value="'+t+'">';}).join('')+'</datalist>'+
+      '</td>'+
+      '<td>'+
+        '<select onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:110px">'+gradeOpts(r.grade)+'</select>'+
+        (c.note?'<div class="c-note">'+c.note+'</div>':'')+
+      '</td>'+
+      '<td><input type="number" step="0.01" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" step="0.01" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:50px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:66px"></td>'+
+      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="upd('+r.id+',\'buy\',this.value)" style="width:66px"></td>'+
-      '<td class="c-profit"'+(c.profit<0?' style="color:var(--rd)"':'')+'>'+c.profit.toLocaleString()+'</td>'+
+      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
+      '<td class="c-profit"'+pStyle+'>'+c.profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delRow('+r.id+')">✕</button></td>';
     tbody.appendChild(tr);
   });
@@ -324,14 +408,14 @@ function renderTable(){
 }
 
 function upd(id,field,val){
-  var r=rows.find(function(x){return x.id===id;});if(!r)return;
-  if(field==='type')r.type=val;
-  else if(field==='grade')r.grade=val;
+  var r=rows.find(function(x){ return x.id===id; }); if(!r) return;
+  if(field==='type') r.type=val;
+  else if(field==='grade') r.grade=val;
   else r[field]=parseFloat(val)||0;
   renderTable();
 }
 
-function delRow(id){rows=rows.filter(function(x){return x.id!==id;});renderTable();}
+function delRow(id){ rows=rows.filter(function(x){ return x.id!==id; }); renderTable(); }
 </script>
 </body>
 </html>
