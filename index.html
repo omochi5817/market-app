@@ -109,8 +109,13 @@ td select:focus,td input:focus{border-color:var(--gold);}
 
 <div class="pg" id="t2">
   <div class="sbar"><div class="sdot" id="sd2"></div><span id="st2">相場未取得</span></div>
-  <div style="text-align:right;margin-bottom:8px">
-    <button onclick="toggleGdb()" style="background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;color:var(--mu);padding:5px 12px;font-size:12px;cursor:pointer" id="gdbBtn">GDB品目を展開 ▼</button>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px">
+    <div style="display:flex;gap:4px">
+      <button onclick="switchJkin(0)" id="jkTab0" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--gold);background:var(--gold);color:#000;cursor:pointer">①</button>
+      <button onclick="switchJkin(1)" id="jkTab1" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">②</button>
+      <button onclick="switchJkin(2)" id="jkTab2" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">③</button>
+    </div>
+    <button onclick="toggleGdb()" style="background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;color:var(--mu);padding:5px 10px;font-size:12px;cursor:pointer" id="gdbBtn">GDB ▼</button>
   </div>
   <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
     <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="totalCount">0</div></div>
@@ -147,6 +152,11 @@ td select:focus,td input:focus{border-color:var(--gold);}
 </div>
 
 <div class="pg" id="t4">
+  <div style="display:flex;gap:4px;margin-bottom:8px">
+    <button onclick="switchKk(0)" id="kkTab0" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--gold);background:var(--gold);color:#000;cursor:pointer">①</button>
+    <button onclick="switchKk(1)" id="kkTab1" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">②</button>
+    <button onclick="switchKk(2)" id="kkTab2" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">③</button>
+  </div>
   <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr">
     <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="kkCount">0</div></div>
     <div class="tb-item"><div class="tl">買取額</div><div class="tv tv-buy" id="kkTotalBuy">¥0</div></div>
@@ -179,6 +189,11 @@ td select:focus,td input:focus{border-color:var(--gold);}
 </div>
 
 <div class="pg" id="t3">
+  <div style="display:flex;gap:4px;margin-bottom:8px">
+    <button onclick="switchAuc(0)" id="aucTab0" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--gold);background:var(--gold);color:#000;cursor:pointer">①</button>
+    <button onclick="switchAuc(1)" id="aucTab1" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">②</button>
+    <button onclick="switchAuc(2)" id="aucTab2" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">③</button>
+  </div>
   <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr">
     <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="aucCount">0</div></div>
     <div class="tb-item"><div class="tl">合計MAX</div><div class="tv tv-max" id="aucTotalMax">¥0</div></div>
@@ -211,6 +226,11 @@ td select:focus,td input:focus{border-color:var(--gold);}
 </div>
 
 <div class="pg" id="t5">
+  <div style="display:flex;gap:4px;margin-bottom:8px">
+    <button onclick="switchSt(0)" id="stTab0" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--gold);background:var(--gold);color:#000;cursor:pointer">①</button>
+    <button onclick="switchSt(1)" id="stTab1" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">②</button>
+    <button onclick="switchSt(2)" id="stTab2" style="padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer">③</button>
+  </div>
   <div class="stamp-total">
     <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
       <div class="st-item"><div class="stl">シート</div><div class="stv" id="stSheet">¥0</div></div>
@@ -271,7 +291,8 @@ td select:focus,td input:focus{border-color:var(--gold);}
 
 <script>
 var mkt=null, eng=localStorage.getItem('eng')||'gemini', b64=null, mime='image/jpeg';
-var rows=[], rid=0, jkColOpen=false;
+var allRows=[[],[],[]], allRid=[0,0,0], curJkin=0;
+var rows=allRows[0], rid=allRid[0];
 
 // 種類候補（datalistで直接入力も可）
 var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋﾟｱｽ','ｲﾔﾘﾝｸﾞ','ｶﾌｽ','ﾀｲﾋﾟﾝ','ｺｲﾝ','金歯','ﾆﾌﾞ','IG'];
@@ -427,10 +448,22 @@ window.onload=function(){
   setEng(eng);
   var s=localStorage.getItem('mkt');
   if(s){ mkt=JSON.parse(s); updateStatus(); }
-  for(var i=0;i<10;i++) addRow();
-  for(var i=0;i<10;i++) addAucRow();
-  for(var i=0;i<10;i++) addKkRow();
-  for(var i=0;i<8;i++) addStRow();
+  // 保存データ読込
+  loadAllData();
+  // データがなければ初期行を追加
+  if(allRows[0].length===0) for(var i=0;i<10;i++) addRow();
+  if(allRows[1].length===0){switchJkin(1);for(var i=0;i<10;i++) addRow();switchJkin(0);}
+  if(allRows[2].length===0){switchJkin(2);for(var i=0;i<10;i++) addRow();switchJkin(0);}
+  if(allAucRows[0].length===0) for(var i=0;i<10;i++) addAucRow();
+  if(allAucRows[1].length===0){switchAuc(1);for(var i=0;i<10;i++) addAucRow();switchAuc(0);}
+  if(allAucRows[2].length===0){switchAuc(2);for(var i=0;i<10;i++) addAucRow();switchAuc(0);}
+  if(allKkRows[0].length===0) for(var i=0;i<10;i++) addKkRow();
+  if(allKkRows[1].length===0){switchKk(1);for(var i=0;i<10;i++) addKkRow();switchKk(0);}
+  if(allKkRows[2].length===0){switchKk(2);for(var i=0;i<10;i++) addKkRow();switchKk(0);}
+  if(allStRows[0].length===0) for(var i=0;i<8;i++) addStRow();
+  if(allStRows[1].length===0){switchSt(1);for(var i=0;i<8;i++) addStRow();switchSt(0);}
+  if(allStRows[2].length===0){switchSt(2);for(var i=0;i<8;i++) addStRow();switchSt(0);}
+  renderTable();
 };
 
 function showTab(id,el){
@@ -438,9 +471,9 @@ function showTab(id,el){
   document.querySelectorAll('.tab').forEach(function(e){e.classList.remove('on');});
   document.getElementById(id).classList.add('on'); el.classList.add('on');
   if(id==='t2') renderTable();
-  if(id==='t3') renderAucTable();
-  if(id==='t4') renderKinkenTable();
-  if(id==='t5') renderStampTable();
+  if(id==='t3'){allAucRows[curAuc]=aucRows;renderAucTable();}
+  if(id==='t4'){allKkRows[curKk]=kkRows;renderKinkenTable();}
+  if(id==='t5'){allStRows[curSt]=stRows;renderStampTable();}
 }
 
 function setEng(e){ eng=e; localStorage.setItem('eng',e); document.getElementById('bg').className=e==='gemini'?'on':''; document.getElementById('bc').className=e==='claude'?'on':''; }
@@ -523,7 +556,67 @@ async function doWrite(){
   }catch(e){ ss('s3','ng'); alert('書込エラー: '+e.message); }
 }
 
+
+// ===== データ永続化 =====
+function saveAllData(){
+  try{
+    localStorage.setItem('jkin_rows', JSON.stringify(allRows));
+    localStorage.setItem('jkin_rid', JSON.stringify(allRid));
+    localStorage.setItem('auc_rows', JSON.stringify(allAucRows));
+    localStorage.setItem('auc_rid', JSON.stringify(allAucRid));
+    localStorage.setItem('kk_rows', JSON.stringify(allKkRows));
+    localStorage.setItem('kk_rid', JSON.stringify(allKkRid));
+    localStorage.setItem('st_rows', JSON.stringify(allStRows));
+    localStorage.setItem('st_rid', JSON.stringify(allStRid));
+  }catch(e){console.error('save error',e);}
+}
+
+function loadAllData(){
+  try{
+    var jr=localStorage.getItem('jkin_rows');
+    var jrid=localStorage.getItem('jkin_rid');
+    if(jr&&jrid){
+      allRows=JSON.parse(jr);
+      allRid=JSON.parse(jrid);
+      // 各配列が未定義の場合は初期化
+      for(var i=0;i<3;i++){if(!allRows[i])allRows[i]=[];}
+      rows=allRows[curJkin];
+      rid=allRid[curJkin];
+    }
+    var ar=localStorage.getItem('auc_rows');
+    var arid=localStorage.getItem('auc_rid');
+    if(ar&&arid){var tmp=JSON.parse(ar);if(Array.isArray(tmp[0])){allAucRows=tmp;allAucRid=JSON.parse(arid);}else{allAucRows[0]=tmp;} aucRows=allAucRows[curAuc];aucRid=allAucRid[curAuc];}
+    var kr=localStorage.getItem('kk_rows');
+    var krid=localStorage.getItem('kk_rid');
+    if(kr&&krid){var tmpk=JSON.parse(kr);if(Array.isArray(tmpk[0])){allKkRows=tmpk;allKkRid=JSON.parse(krid);}else{allKkRows[0]=tmpk;} kkRows=allKkRows[curKk];kkRid=allKkRid[curKk];}
+    var sr=localStorage.getItem('st_rows');
+    var srid=localStorage.getItem('st_rid');
+    if(sr&&srid){var tmps=JSON.parse(sr);if(Array.isArray(tmps[0])){allStRows=tmps;allStRid=JSON.parse(srid);}else{allStRows[0]=tmps;} stRows=allStRows[curSt];stRid=allStRid[curSt];}
+  }catch(e){console.error('load error',e);}
+}
+
 // ===== 査定表 =====
+
+
+function switchJkin(idx){
+  // 現在のrowsを保存
+  allRows[curJkin]=rows;
+  allRid[curJkin]=rid;
+  // 切替
+  curJkin=idx;
+  rows=allRows[curJkin];
+  rid=allRid[curJkin];
+  // ボタン色更新
+  for(var i=0;i<3;i++){
+    var btn=document.getElementById('jkTab'+i);
+    if(btn){
+      btn.style.background=i===idx?'var(--gold)':'var(--sur2)';
+      btn.style.color=i===idx?'#000':'var(--mu)';
+      btn.style.borderColor=i===idx?'var(--gold)':'var(--bdr)';
+    }
+  }
+  renderTable();
+}
 
 function toggleJkCol(){
   jkColOpen=!jkColOpen;
@@ -534,7 +627,7 @@ function toggleJkCol(){
   renderTable();
 }
 
-function addRow(){ rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0}); renderTable(); }
+function addRow(){ rows.push({id:rid++,type:'',grade:'',w:0,ishi:0,saki:0,buy:0}); allRows[curJkin]=rows; allRid[curJkin]=rid; renderTable(); saveAllData(); }
 function clearRows(){ rows=[]; rid=0; for(var i=0;i<10;i++) addRow();
   for(var i=0;i<10;i++) addAucRow();
   for(var i=0;i<10;i++) addKkRow();
@@ -616,8 +709,8 @@ function renderTable(){
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
       '<td><input type="number" step="0.1" min="0" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      (jkColOpen?'<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>':'<td style="color:var(--mu);font-size:10px">'+(r.ishi||'-')+'</td>')+
-      (jkColOpen?'<td class="c-jk">'+c.jk.toFixed(1)+'g</td>':'<td style="color:var(--mu);font-size:10px">'+c.jk.toFixed(1)+'g</td>')+
+      '<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
+      '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
@@ -639,16 +732,37 @@ function upd(id,field,val){
   if(field==='type') r.type=val;
   else if(field==='grade') r.grade=val;
   else r[field]=parseFloat(val)||0;
+  allRows[curJkin]=rows;
   renderTable();
+  saveAllData();
 }
 
-function delRow(id){ rows=rows.filter(function(x){ return x.id!==id; }); renderTable(); }
+function delRow(id){ rows=rows.filter(function(x){ return x.id!==id; }); allRows[curJkin]=rows; renderTable(); saveAllData(); }
 
 
 // ===== 金券 =====
-var kkRows=[], kkRid=0;
+var allKkRows=[[],[],[]], allKkRid=[0,0,0], curKk=0;
+var kkRows=allKkRows[0], kkRid=allKkRid[0];
 
-function addKkRow(){ kkRows.push({id:kkRid++,name:'',teika:0,pct:0,qty:1,tanka_override:null,buy:0}); renderKinkenTable(); }
+
+function switchKk(idx){
+  allKkRows[curKk]=kkRows;
+  allKkRid[curKk]=kkRid;
+  curKk=idx;
+  kkRows=allKkRows[curKk];
+  kkRid=allKkRid[curKk];
+  for(var i=0;i<3;i++){
+    var btn=document.getElementById('kkTab'+i);
+    if(btn){
+      btn.style.background=i===idx?'var(--gold)':'var(--sur2)';
+      btn.style.color=i===idx?'#000':'var(--mu)';
+      btn.style.borderColor=i===idx?'var(--gold)':'var(--bdr)';
+    }
+  }
+  renderKinkenTable();
+}
+
+function addKkRow(){ kkRows.push({id:kkRid++,name:'',teika:0,pct:0,qty:1,tanka_override:null,buy:0}); allKkRows[curKk]=kkRows; allKkRid[curKk]=kkRid; renderKinkenTable(); saveAllData(); }
 function clearKkRows(){ kkRows=[]; kkRid=0; for(var i=0;i<10;i++) addKkRow();
   for(var i=0;i<8;i++) addStRow(); }
 
@@ -692,15 +806,36 @@ function updKk(id,field,val){
   if(field==='name') r.name=val;
   else if(field==='tanka_override') r.tanka_override=(val===''||val==='0'?null:parseFloat(val)||0);
   else r[field]=parseFloat(val)||0;
+  allKkRows[curKk]=kkRows;
   renderKinkenTable();
+  saveAllData();
 }
 
-function delKkRow(id){ kkRows=kkRows.filter(function(x){return x.id!==id;}); renderKinkenTable(); }
+function delKkRow(id){ kkRows=kkRows.filter(function(x){return x.id!==id;}); allKkRows[curKk]=kkRows; renderKinkenTable(); saveAllData(); }
 
 // ===== オークション =====
-var aucRows=[], aucRid=0;
+var allAucRows=[[],[],[]], allAucRid=[0,0,0], curAuc=0;
+var aucRows=allAucRows[0], aucRid=allAucRid[0];
 
-function addAucRow(){ aucRows.push({id:aucRid++,memo:'',saki:0,oroshi1:0,oroshi2:0,buy:0}); renderAucTable(); }
+
+function switchAuc(idx){
+  allAucRows[curAuc]=aucRows;
+  allAucRid[curAuc]=aucRid;
+  curAuc=idx;
+  aucRows=allAucRows[curAuc];
+  aucRid=allAucRid[curAuc];
+  for(var i=0;i<3;i++){
+    var btn=document.getElementById('aucTab'+i);
+    if(btn){
+      btn.style.background=i===idx?'var(--gold)':'var(--sur2)';
+      btn.style.color=i===idx?'#000':'var(--mu)';
+      btn.style.borderColor=i===idx?'var(--gold)':'var(--bdr)';
+    }
+  }
+  renderAucTable();
+}
+
+function addAucRow(){ aucRows.push({id:aucRid++,memo:'',saki:0,oroshi1:0,oroshi2:0,buy:0}); allAucRows[curAuc]=aucRows; allAucRid[curAuc]=aucRid; renderAucTable(); saveAllData(); }
 function clearAucRows(){ aucRows=[]; aucRid=0; for(var i=0;i<10;i++) addAucRow();
   for(var i=0;i<10;i++) addKkRow();
   for(var i=0;i<8;i++) addStRow(); }
@@ -745,14 +880,17 @@ function updAuc(id,field,val){
   var r=aucRows.find(function(x){ return x.id===id; }); if(!r) return;
   if(field==='memo') r.memo=val;
   else r[field]=parseFloat(val)||0;
+  allAucRows[curAuc]=aucRows;
   renderAucTable();
+  saveAllData();
 }
 
-function delAucRow(id){ aucRows=aucRows.filter(function(x){ return x.id!==id; }); renderAucTable(); }
+function delAucRow(id){ aucRows=aucRows.filter(function(x){ return x.id!==id; }); allAucRows[curAuc]=aucRows; renderAucTable(); saveAllData(); }
 
 
 // ===== 切手・はがき =====
-var stRows=[], stRid=0;
+var allStRows=[[],[],[]], allStRid=[0,0,0], curSt=0;
+var stRows=allStRows[0], stRid=allStRid[0];
 
 var STAMP_TYPES=['シート','混合セット','バラ','はがき','レターパック','スマートレター'];
 
@@ -828,8 +966,26 @@ var MIX_SETS=[
   {n:'80円×10+50円×10', price:1300}
 ];
 
-function addStRow(){ stRows.push({id:stRid++,stype:'',skind:'',teimen:0,maisu:1,sheets:1,mix_price:0,buy_actual:0}); renderStampTable(); }
-function clearStRows(){ stRows=[]; stRid=0; for(var i=0;i<8;i++) addStRow(); }
+
+function switchSt(idx){
+  allStRows[curSt]=stRows;
+  allStRid[curSt]=stRid;
+  curSt=idx;
+  stRows=allStRows[curSt];
+  stRid=allStRid[curSt];
+  for(var i=0;i<3;i++){
+    var btn=document.getElementById('stTab'+i);
+    if(btn){
+      btn.style.background=i===idx?'var(--gold)':'var(--sur2)';
+      btn.style.color=i===idx?'#000':'var(--mu)';
+      btn.style.borderColor=i===idx?'var(--gold)':'var(--bdr)';
+    }
+  }
+  renderStampTable();
+}
+
+function addStRow(){ stRows.push({id:stRid++,stype:'',skind:'',teimen:0,maisu:1,sheets:1,mix_price:0,buy_actual:0}); allStRows[curSt]=stRows; allStRid[curSt]=stRid; renderStampTable(); saveAllData(); }
+function clearStRows(){ allStRows[curSt]=[]; allStRid[curSt]=0; stRows=allStRows[curSt]; stRid=allStRid[curSt]; for(var i=0;i<8;i++) addStRow(); }
 
 function getStRate(r){
   if(r.stype==='バラ') return 100;
@@ -988,10 +1144,12 @@ function updSt(id,field,val){
   else if(field==='buy_actual') r.buy_actual=parseFloat(val)||0;
   else if(field==='skind') r.skind=val;
   else r[field]=parseFloat(val)||0;
+  allStRows[curSt]=stRows;
   renderStampTable();
+  saveAllData();
 }
 
-function delStRow(id){ stRows=stRows.filter(function(x){return x.id!==id;}); renderStampTable(); }
+function delStRow(id){ stRows=stRows.filter(function(x){return x.id!==id;}); allStRows[curSt]=stRows; renderStampTable(); saveAllData(); }
 
 </script>
 </body>
