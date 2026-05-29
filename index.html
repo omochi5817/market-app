@@ -131,11 +131,6 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .fp input{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rsm);
   color:var(--tx);padding:10px 12px;font-size:13px;margin-bottom:10px;outline:none;transition:border-color .15s;}
 .fp input:focus{border-color:var(--gold);}
-.eng{display:flex;gap:8px;margin-bottom:12px;}
-.eng button{flex:1;padding:9px;border-radius:var(--rsm);border:2px solid var(--bdr);
-  background:transparent;color:var(--mu);font-weight:700;cursor:pointer;font-size:12px;
-  font-family:inherit;transition:all .15s;}
-.eng button.on{background:var(--gold-g);color:#0a0a0c;border-color:var(--gold);}
 
 /* サブタブ */
 .subtab-bar{display:flex;gap:6px;margin-bottom:10px;}
@@ -375,9 +370,6 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 
 <div class="pg" id="t6">
   <div class="card fp">
-    <h3>AIエンジン</h3>
-    <div class="eng"><button id="bg" class="on" onclick="setEng('gemini')">Gemini(無料)</button><button id="bc" onclick="setEng('claude')">Claude(有料)</button></div>
-    <label>Gemini API Key</label><input type="password" id="gk" placeholder="AIza...">
     <label>Claude API Key</label><input type="password" id="ck" placeholder="sk-ant-...">
     <label>GAS デプロイURL</label><input type="text" id="gu" placeholder="https://script.google.com/...">
     <button class="btn btn-gold" onclick="save()">⚙ 設定を保存</button>
@@ -385,7 +377,7 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 </div>
 
 <script>
-var mkt=null, eng=localStorage.getItem('eng')||'gemini', b64=null, mime='image/jpeg';
+var mkt=null, b64=null, mime='image/jpeg';
 var allRows=[[],[],[]], allRid=[0,0,0], curJkin=0;
 var rows=allRows[0], rid=allRid[0];
 
@@ -537,10 +529,8 @@ function getNote(gradeName, weight) {
 }
 
 window.onload=function(){
-  document.getElementById('gk').value=localStorage.getItem('gk')||'';
   document.getElementById('ck').value=localStorage.getItem('ck')||'';
   document.getElementById('gu').value=localStorage.getItem('gu')||'';
-  setEng(eng);
   var s=localStorage.getItem('mkt');
   if(s){ mkt=JSON.parse(s); updateStatus(); }
   // 保存データ読込
@@ -572,8 +562,7 @@ function showTab(id,el){
   if(id==='t5'){allStRows[curSt]=stRows;renderStampTable();}
 }
 
-function setEng(e){ eng=e; localStorage.setItem('eng',e); document.getElementById('bg').className=e==='gemini'?'on':''; document.getElementById('bc').className=e==='claude'?'on':''; }
-function save(){ localStorage.setItem('gk',document.getElementById('gk').value.trim()); localStorage.setItem('ck',document.getElementById('ck').value.trim()); localStorage.setItem('gu',document.getElementById('gu').value.trim()); alert('保存しました'); }
+function save(){ localStorage.setItem('ck',document.getElementById('ck').value.trim()); localStorage.setItem('gu',document.getElementById('gu').value.trim()); alert('保存しました'); }
 
 function updateStatus(){
   if(!mkt) return;
@@ -600,23 +589,16 @@ function ss(id,cls){ document.getElementById(id).className='step '+cls; }
 function getPrompt(){ return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10'; }
 
 async function doAnalyze(){
-  var key=localStorage.getItem(eng==='gemini'?'gk':'ck');
-  if(!key) return alert('APIキーを設定してください');
+  var key=localStorage.getItem('ck');
+  if(!key) return alert('Claude APIキーを設定してください（設定タブ）');
   if(!b64) return alert('画像を選択してください');
   document.getElementById('ab').disabled=true; document.getElementById('ab').textContent='解析中...';
   document.getElementById('st').classList.add('show'); document.getElementById('pv').style.display='none';
   ss('s1','go'); ss('s2',''); ss('s3','');
   try{
-    var text;
-    if(eng==='gemini'){
-      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})});
-      var d=await res.json(); if(!res.ok) throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
-      text=d.candidates[0].content.parts[0].text;
-    }else{
-      var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
-      var d=await res.json(); if(!res.ok) throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
-      text=d.content[0].text;
-    }
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
+    var d=await res.json(); if(!res.ok) throw new Error(d.error&&d.error.message||JSON.stringify(d.error));
+    var text=d.content[0].text;
     ss('s1','ok'); ss('s2','go');
     var m=text.match(/\{[\s\S]*\}/); if(!m) throw new Error('JSONが見つかりません');
     mkt=JSON.parse(m[0]); localStorage.setItem('mkt',JSON.stringify(mkt));
