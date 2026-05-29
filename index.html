@@ -2,14 +2,19 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="相場 PRO">
+<meta name="theme-color" content="#d4b254">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap"></noscript>
 <title>相場 PRO</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap');
 :root{
   --bg:#0a0a0c;--sur:#141417;--sur2:#1f1f24;--bdr:#2c2c35;
   --gold:#d4b254;--gold-light:#f3df95;--gold-g:linear-gradient(135deg,#d4b254,#f3df95);
@@ -64,9 +69,10 @@ tbody td{padding:6px 4px;text-align:center;font-size:12px;vertical-align:middle;
 tbody td:first-child{color:var(--mu);font-size:10px;padding:6px 7px;}
 td select,td input[type=number],td input[type=text]{
   background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;
-  color:var(--tx);padding:5px 4px;font-size:12px;width:100%;text-align:center;
-  outline:none;font-family:inherit;transition:border-color .15s;}
-td select:focus,td input:focus{border-color:var(--gold);}
+  color:var(--tx);padding:6px 4px;font-size:16px;width:100%;text-align:center;
+  outline:none;font-family:inherit;transition:border-color .15s;
+  -webkit-appearance:none;appearance:none;}
+td select:focus,td input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,178,84,.2);}
 td input[type=number]{font-family:'DM Mono',monospace;}
 
 /* ボタン */
@@ -80,9 +86,11 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .btn-green{background:var(--gn);color:#fff;}
 .btn:disabled{opacity:.35;}
 .del-btn{background:rgba(239,68,68,.12);color:var(--rd);border:1px solid rgba(239,68,68,.25);
-  border-radius:4px;padding:3px 7px;cursor:pointer;font-size:11px;
-  transition:background .15s;}
-.del-btn:hover{background:rgba(239,68,68,.25);}
+  border-radius:6px;padding:0;cursor:pointer;font-size:14px;font-weight:700;
+  transition:background .15s,transform .1s;
+  min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+.del-btn:active{background:rgba(239,68,68,.35);transform:scale(.94);}
+@media(hover:hover){.del-btn:hover{background:rgba(239,68,68,.25);}}
 
 /* セル値表示 */
 .c-jk{color:var(--mu);font-family:'DM Mono',monospace;font-size:11px;}
@@ -130,11 +138,13 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .eng button.on{background:var(--gold-g);color:#0a0a0c;border-color:var(--gold);}
 
 /* サブタブ */
-.subtab-bar{display:flex;gap:5px;margin-bottom:10px;}
-.subtab{padding:5px 12px;font-size:12px;font-weight:700;border-radius:6px;
+.subtab-bar{display:flex;gap:6px;margin-bottom:10px;}
+.subtab{padding:10px 16px;font-size:13px;font-weight:700;border-radius:8px;
   border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer;
-  font-family:inherit;transition:all .15s;}
+  font-family:inherit;transition:all .15s;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;}
 .subtab.on{background:var(--gold-g);color:#0a0a0c;border-color:var(--gold);}
+.subtab:active{transform:scale(.96);}
 
 /* 切手合計 */
 .stamp-total{background:rgba(212,178,84,.08);border:1px solid var(--bdr);
@@ -144,6 +154,16 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .st-item{text-align:center;}
 .st-item .stl{font-size:10px;color:var(--mu);margin-bottom:2px;}
 .st-item .stv{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;}
+
+/* 合計バー レスポンシブ */
+@media(max-width:420px){
+  .total-bar{display:flex;flex-wrap:wrap;gap:6px 4px;}
+  .total-bar .tb-item{flex:1 1 calc(33.33% - 4px);min-width:0;}
+  .total-bar .tb-item:first-child{flex:1 1 calc(50% - 4px);}
+  .total-bar .tb-item:nth-child(2){flex:1 1 calc(50% - 4px);}
+  .stamp-total .st-row{display:flex;flex-wrap:wrap;gap:5px 4px;}
+  .stamp-total .st-item{flex:1 1 calc(33.33% - 4px);min-width:0;}
+}
 
 /* ボトムナビ */
 .nav-bar{position:fixed;bottom:0;left:0;right:0;
@@ -773,20 +793,20 @@ function renderTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td>'+
-        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" style="width:74px">'+
+        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" oninput="upd('+r.id+',\'type\',this.value)" style="width:74px">'+
         '<datalist id="'+dlId+'">'+TYPES.map(function(t){return '<option value="'+t+'">';}).join('')+'</datalist>'+
       '</td>'+
       '<td>'+
         '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:98px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="number" step="0.1" min="0" value="'+(r.w||'')+'" placeholder="0" onchange="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.1" min="0" value="'+(r.ishi||'')+'" placeholder="0" onchange="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
+      '<td><input type="number" step="0.1" min="0" inputmode="decimal" value="'+(r.w||'')+'" placeholder="0" oninput="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" step="0.1" min="0" inputmode="decimal" value="'+(r.ishi||'')+'" placeholder="0" oninput="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+c.profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delRow('+r.id+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -851,13 +871,13 @@ function renderKinkenTable(){
     var rid=r.id;
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
-      '<td><input type="text" value="'+(r.name||'')+'" placeholder="商品" onchange="updKk('+rid+',\'name\',this.value)" style="width:76px"></td>'+
-      '<td><input type="number" value="'+(r.teika||'')+'" placeholder="0" onchange="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" step="0.1" value="'+(r.pct||'')+'" placeholder="0" onchange="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
-      '<td><input type="number" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" onchange="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" value="'+(r.qty||1)+'" placeholder="1" onchange="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
+      '<td><input type="text" value="'+(r.name||'')+'" placeholder="商品" oninput="updKk('+rid+',\'name\',this.value)" style="width:76px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.teika||'')+'" placeholder="0" oninput="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" inputmode="decimal" step="0.1" value="'+(r.pct||'')+'" placeholder="0" oninput="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" oninput="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.qty||1)+'" placeholder="1" oninput="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delKkRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -922,12 +942,12 @@ function renderAucTable(){
     var tr=document.createElement('tr');
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
-      '<td><input type="text" value="'+(r.memo||'')+'" placeholder="商品メモ" onchange="updAuc('+rid+',\'memo\',this.value)" style="width:92px"></td>'+
-      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" value="'+(r.oroshi1||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" value="'+(r.oroshi2||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
+      '<td><input type="text" value="'+(r.memo||'')+'" placeholder="商品メモ" oninput="updAuc('+rid+',\'memo\',this.value)" style="width:92px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.oroshi1||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.oroshi2||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delAucRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -1168,12 +1188,12 @@ function renderStampTable(){
         STAMP_TYPES.map(function(t){return '<option value="'+t+'"'+(r.stype===t?' selected':'')+'>'+t+'</option>';}).join('')+
       '</select></td>'+
       '<td>'+(needKind?'<select onchange="updSt('+rid+',\'skind\',this.value)" style="min-width:120px">'+kindOpts(r.skind,r.stype)+'</select>':'<span style="color:var(--mu);font-size:11px">-</span>')+'</td>'+
-      '<td>'+(needTeimen?'<input type="number" value="'+(r.teimen||'')+'" placeholder="0" onchange="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needMaisu?'<input type="number" value="'+(r.maisu||1)+'" placeholder="1" onchange="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needSheets?'<input type="number" value="'+(r.sheets||1)+'" placeholder="1" onchange="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
+      '<td>'+(needTeimen?'<input type="number" inputmode="numeric" value="'+(r.teimen||'')+'" placeholder="0" oninput="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needMaisu?'<input type="number" inputmode="numeric" value="'+(r.maisu||1)+'" placeholder="1" oninput="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needSheets?'<input type="number" inputmode="numeric" value="'+(r.sheets||1)+'" placeholder="1" oninput="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
       '<td style="font-size:11px;color:var(--mu)">'+rateDisp+'</td>'+
       '<td class="c-max">'+c.teimen.toLocaleString()+'</td>'+
-      '<td><input type="number" value="'+(r.buy_actual||'')+'" placeholder="0" onchange="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" inputmode="numeric" value="'+(r.buy_actual||'')+'" placeholder="0" oninput="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delStRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -1210,6 +1230,13 @@ function updSt(id,field,val){
 }
 
 function delStRow(id){ stRows=stRows.filter(function(x){return x.id!==id;}); allStRows[curSt]=stRows; renderStampTable(); saveAllData(); }
+
+// Service Worker 登録
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  });
+}
 
 </script>
 </body>
