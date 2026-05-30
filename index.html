@@ -782,13 +782,13 @@ function renderTable(){
         '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:98px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="number" step="0.1" min="0" inputmode="decimal" value="'+(r.w||'')+'" placeholder="0" oninput="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.1" min="0" inputmode="decimal" value="'+(r.ishi||'')+'" placeholder="0" oninput="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
+      '<td><input type="number" step="0.1" min="0" max="999.9" inputmode="decimal" value="'+(r.w||'')+'" placeholder="0" oninput="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" step="0.1" min="0" max="999.9" inputmode="decimal" value="'+(r.ishi||'')+'" placeholder="0" oninput="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+c.profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delRow('+r.id+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -854,12 +854,12 @@ function renderKinkenTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td><input type="text" value="'+(r.name||'')+'" placeholder="商品" oninput="updKk('+rid+',\'name\',this.value)" style="width:76px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.teika||'')+'" placeholder="0" oninput="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" inputmode="decimal" step="0.1" value="'+(r.pct||'')+'" placeholder="0" oninput="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" oninput="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.qty||1)+'" placeholder="1" oninput="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.teika||'')+'" placeholder="0" oninput="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" min="0" max="100" step="0.1" inputmode="decimal" value="'+(r.pct||'')+'" placeholder="0" oninput="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" oninput="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" min="1" max="9999" inputmode="numeric" value="'+(r.qty||1)+'" placeholder="1" oninput="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delKkRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -925,11 +925,11 @@ function renderAucTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td><input type="text" value="'+(r.memo||'')+'" placeholder="商品メモ" oninput="updAuc('+rid+',\'memo\',this.value)" style="width:92px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.oroshi1||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.oroshi2||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.saki||'')+'" placeholder="0" oninput="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.oroshi1||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.oroshi2||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.buy||'')+'" placeholder="0" oninput="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delAucRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -1170,12 +1170,12 @@ function renderStampTable(){
         STAMP_TYPES.map(function(t){return '<option value="'+t+'"'+(r.stype===t?' selected':'')+'>'+t+'</option>';}).join('')+
       '</select></td>'+
       '<td>'+(needKind?'<select onchange="updSt('+rid+',\'skind\',this.value)" style="min-width:120px">'+kindOpts(r.skind,r.stype)+'</select>':'<span style="color:var(--mu);font-size:11px">-</span>')+'</td>'+
-      '<td>'+(needTeimen?'<input type="number" inputmode="numeric" value="'+(r.teimen||'')+'" placeholder="0" oninput="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needMaisu?'<input type="number" inputmode="numeric" value="'+(r.maisu||1)+'" placeholder="1" oninput="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needSheets?'<input type="number" inputmode="numeric" value="'+(r.sheets||1)+'" placeholder="1" oninput="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
+      '<td>'+(needTeimen?'<input type="number" min="0" max="9999" inputmode="numeric" value="'+(r.teimen||'')+'" placeholder="0" oninput="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needMaisu?'<input type="number" min="1" max="9999" inputmode="numeric" value="'+(r.maisu||1)+'" placeholder="1" oninput="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needSheets?'<input type="number" min="1" max="9999" inputmode="numeric" value="'+(r.sheets||1)+'" placeholder="1" oninput="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
       '<td style="font-size:11px;color:var(--mu)">'+rateDisp+'</td>'+
       '<td class="c-max">'+c.teimen.toLocaleString()+'</td>'+
-      '<td><input type="number" inputmode="numeric" value="'+(r.buy_actual||'')+'" placeholder="0" oninput="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" min="0" max="99999999" inputmode="numeric" value="'+(r.buy_actual||'')+'" placeholder="0" oninput="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delStRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
