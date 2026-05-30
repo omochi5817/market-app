@@ -2,19 +2,16 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="相場 PRO">
 <meta name="theme-color" content="#d4b254">
 <link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap"></noscript>
 <title>相場 PRO</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&display=swap');
 :root{
   --bg:#0a0a0c;--sur:#141417;--sur2:#1f1f24;--bdr:#2c2c35;
   --gold:#d4b254;--gold-light:#f3df95;--gold-g:linear-gradient(135deg,#d4b254,#f3df95);
@@ -69,10 +66,9 @@ tbody td{padding:6px 4px;text-align:center;font-size:12px;vertical-align:middle;
 tbody td:first-child{color:var(--mu);font-size:10px;padding:6px 7px;}
 td select,td input[type=number],td input[type=text]{
   background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;
-  color:var(--tx);padding:6px 4px;font-size:16px;width:100%;text-align:center;
-  outline:none;font-family:inherit;transition:border-color .15s;
-  -webkit-appearance:none;appearance:none;}
-td select:focus,td input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,178,84,.2);}
+  color:var(--tx);padding:5px 4px;font-size:12px;width:100%;text-align:center;
+  outline:none;font-family:inherit;transition:border-color .15s;}
+td select:focus,td input:focus{border-color:var(--gold);}
 td input[type=number]{font-family:'DM Mono',monospace;}
 
 /* ボタン */
@@ -86,11 +82,9 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .btn-green{background:var(--gn);color:#fff;}
 .btn:disabled{opacity:.35;}
 .del-btn{background:rgba(239,68,68,.12);color:var(--rd);border:1px solid rgba(239,68,68,.25);
-  border-radius:6px;padding:0;cursor:pointer;font-size:14px;font-weight:700;
-  transition:background .15s,transform .1s;
-  min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
-.del-btn:active{background:rgba(239,68,68,.35);transform:scale(.94);}
-@media(hover:hover){.del-btn:hover{background:rgba(239,68,68,.25);}}
+  border-radius:4px;padding:3px 7px;cursor:pointer;font-size:11px;
+  transition:background .15s;}
+.del-btn:hover{background:rgba(239,68,68,.25);}
 
 /* セル値表示 */
 .c-jk{color:var(--mu);font-family:'DM Mono',monospace;font-size:11px;}
@@ -133,13 +127,11 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .fp input:focus{border-color:var(--gold);}
 
 /* サブタブ */
-.subtab-bar{display:flex;gap:6px;margin-bottom:10px;}
-.subtab{padding:10px 16px;font-size:13px;font-weight:700;border-radius:8px;
+.subtab-bar{display:flex;gap:5px;margin-bottom:10px;}
+.subtab{padding:5px 12px;font-size:12px;font-weight:700;border-radius:6px;
   border:1px solid var(--bdr);background:var(--sur2);color:var(--mu);cursor:pointer;
-  font-family:inherit;transition:all .15s;min-height:44px;
-  display:inline-flex;align-items:center;justify-content:center;}
+  font-family:inherit;transition:all .15s;}
 .subtab.on{background:var(--gold-g);color:#0a0a0c;border-color:var(--gold);}
-.subtab:active{transform:scale(.96);}
 
 /* 切手合計 */
 .stamp-total{background:rgba(212,178,84,.08);border:1px solid var(--bdr);
@@ -149,16 +141,6 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .st-item{text-align:center;}
 .st-item .stl{font-size:10px;color:var(--mu);margin-bottom:2px;}
 .st-item .stv{font-size:13px;font-weight:700;font-family:'DM Mono',monospace;}
-
-/* 合計バー レスポンシブ */
-@media(max-width:420px){
-  .total-bar{display:flex;flex-wrap:wrap;gap:6px 4px;}
-  .total-bar .tb-item{flex:1 1 calc(33.33% - 4px);min-width:0;}
-  .total-bar .tb-item:first-child{flex:1 1 calc(50% - 4px);}
-  .total-bar .tb-item:nth-child(2){flex:1 1 calc(50% - 4px);}
-  .stamp-total .st-row{display:flex;flex-wrap:wrap;gap:5px 4px;}
-  .stamp-total .st-item{flex:1 1 calc(33.33% - 4px);min-width:0;}
-}
 
 /* ボトムナビ */
 .nav-bar{position:fixed;bottom:0;left:0;right:0;
@@ -189,7 +171,7 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 </div>
 
 <div class="pg on" id="t1">
-  <div class="sbar"><div class="sdot" id="sd1"></div><span id="st1">相場未取得</span></div>
+  <div class="sbar"><div class="sdot" id="sd1"></div><span id="st1">相場未取得</span><span id="todayDate" style="margin-left:auto;color:var(--gold);font-family:'DM Mono',monospace;font-size:12px;font-weight:700"></span></div>
   <div class="upload" id="ua"><input type="file" accept="image/*" onchange="onFile(event)">
     <div id="uc" style="font-size:13px;color:var(--mu)">📷 相場表画像を選択</div>
     <img id="pi" style="display:none">
@@ -201,7 +183,7 @@ td input[type=number]{font-family:'DM Mono',monospace;}
     <div class="step" id="s3">📤 シート書込中...</div>
   </div>
   <div id="pv" style="display:none">
-    <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold)"></span></h3><div class="pg_grid" id="pg_g"></div></div>
+    <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold);font-size:12px;font-weight:400"></span></h3><div class="pg_grid" id="pg_g"></div></div>
     <div class="card"><h3>Ptスクラップ</h3><div class="pg_grid" id="pg_p"></div></div>
     <div class="card"><h3>銀・Pd</h3><div class="pg_grid" id="pg_s"></div></div>
     <button class="btn btn-green" id="wb" onclick="doWrite()" style="display:none">📤 シートに書き込む</button>
@@ -381,6 +363,20 @@ var mkt=null, b64=null, mime='image/jpeg';
 var allRows=[[],[],[]], allRid=[0,0,0], curJkin=0;
 var rows=allRows[0], rid=allRid[0];
 
+// 曜日・日付ユーティリティ
+var DOW=['日','月','火','水','木','金','土'];
+function todayStr(){
+  var n=new Date(); return (n.getMonth()+1)+'/'+(n.getDate())+'('+DOW[n.getDay()]+')';
+}
+function fmtMktDate(md){
+  if(!md) return '';
+  var p=md.split('/'); if(p.length<2) return md;
+  var m=parseInt(p[0]),d=parseInt(p[1]);
+  var year=new Date().getFullYear();
+  var dt=new Date(year,m-1,d);
+  return md+'('+DOW[dt.getDay()]+')相場';
+}
+
 // 種類候補（datalistで直接入力も可）
 var TYPES=['ﾘﾝｸﾞ','ﾈｯｸﾚｽ','ﾌﾞﾚｽ','ﾄｯﾌﾟ','ﾋﾟｱｽ','ｲﾔﾘﾝｸﾞ','ｶﾌｽ','ﾀｲﾋﾟﾝ','ｺｲﾝ','金歯','ﾆﾌﾞ','IG'];
 
@@ -549,6 +545,8 @@ window.onload=function(){
   if(allStRows[1].length===0){switchSt(1);for(var i=0;i<8;i++) addStRow();switchSt(0);}
   if(allStRows[2].length===0){switchSt(2);for(var i=0;i<8;i++) addStRow();switchSt(0);}
   renderTable();
+  // 今日の日付を表示
+  var tde=document.getElementById('todayDate'); if(tde) tde.textContent=todayStr();
 };
 
 function showTab(id,el){
@@ -613,7 +611,7 @@ async function doAnalyze(){
 
 function showPriceView(){
   if(!mkt) return;
-  document.getElementById('pdate').textContent=mkt.date||'';
+  document.getElementById('pdate').textContent=fmtMktDate(mkt.date);
   function rg(id,pairs,cls){
     var el=document.getElementById(id); el.innerHTML='';
     pairs.forEach(function(p){ var v=mkt[p[1]]; if(v==null) return; el.innerHTML+='<div class="pi-box"><div class="pl">'+p[0]+'</div><div class="pv '+cls+'">'+Number(v).toLocaleString()+'</div></div>'; });
