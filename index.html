@@ -125,6 +125,11 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 .fp input{width:100%;background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rsm);
   color:var(--tx);padding:10px 12px;font-size:13px;margin-bottom:10px;outline:none;transition:border-color .15s;}
 .fp input:focus{border-color:var(--gold);}
+.eng{display:flex;gap:8px;margin-bottom:12px;}
+.eng button{flex:1;padding:9px;border-radius:var(--rsm);border:2px solid var(--bdr);
+  background:transparent;color:var(--mu);font-weight:700;cursor:pointer;font-size:12px;
+  font-family:inherit;transition:all .15s;}
+.eng button.on{background:var(--gold-g);color:#0a0a0c;border-color:var(--gold);}
 
 /* サブタブ */
 .subtab-bar{display:flex;gap:5px;margin-bottom:10px;}
@@ -183,7 +188,7 @@ td input[type=number]{font-family:'DM Mono',monospace;}
     <div class="step" id="s3">📤 シート書込中...</div>
   </div>
   <div id="pv" style="display:none">
-    <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold);font-size:12px;font-weight:400"></span></h3><div class="pg_grid" id="pg_g"></div></div>
+    <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold)"></span></h3><div class="pg_grid" id="pg_g"></div></div>
     <div class="card"><h3>Ptスクラップ</h3><div class="pg_grid" id="pg_p"></div></div>
     <div class="card"><h3>銀・Pd</h3><div class="pg_grid" id="pg_s"></div></div>
     <button class="btn btn-green" id="wb" onclick="doWrite()" style="display:none">📤 シートに書き込む</button>
@@ -352,6 +357,9 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 
 <div class="pg" id="t6">
   <div class="card fp">
+    <h3>AIエンジン</h3>
+    <div class="eng"><button id="bg" class="on" onclick="setEng('gemini')">Gemini(無料)</button><button id="bc" onclick="setEng('claude')">Claude(有料)</button></div>
+    <label>Gemini API Key</label><input type="password" id="gk" placeholder="AIza...">
     <label>Claude API Key</label><input type="password" id="ck" placeholder="sk-ant-...">
     <label>GAS デプロイURL</label><input type="text" id="gu" placeholder="https://script.google.com/...">
     <button class="btn btn-gold" onclick="save()">⚙ 設定を保存</button>
@@ -359,19 +367,21 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 </div>
 
 <script>
-var mkt=null, b64=null, mime='image/jpeg';
+var mkt=null, eng=localStorage.getItem('eng')||'gemini', b64=null, mime='image/jpeg';
 var allRows=[[],[],[]], allRid=[0,0,0], curJkin=0;
 var rows=allRows[0], rid=allRid[0];
 
 // 曜日・日付ユーティリティ
 var DOW=['日','月','火','水','木','金','土'];
 function todayStr(){
-  var n=new Date(); return (n.getMonth()+1)+'/'+(n.getDate())+'('+DOW[n.getDay()]+')';
+  var n=new Date();
+  return (n.getMonth()+1)+'/'+(n.getDate())+'('+DOW[n.getDay()]+')';
 }
 function fmtMktDate(md){
   if(!md) return '';
-  var p=md.split('/'); if(p.length<2) return md;
-  var m=parseInt(p[0]),d=parseInt(p[1]);
+  var p=md.split('/');
+  if(p.length<2) return md;
+  var m=parseInt(p[0]), d=parseInt(p[1]);
   var year=new Date().getFullYear();
   var dt=new Date(year,m-1,d);
   return md+'('+DOW[dt.getDay()]+')相場';
@@ -477,21 +487,21 @@ var GRADES=[
   {n:'三菱(Pd)', type:'gdb', base:'pd'},
 
   {g:'▸コンビ'},
-  {n:'950/K18 1:9',   type:'normal',        base:'c950_19'},
-  {n:'950/K18 3:7',   type:'normal',        base:'c950_37'},
+  {n:'950/K18 9:1',   type:'normal',        base:'c950_19'},
+  {n:'950/K18 7:3',   type:'normal',        base:'c950_37'},
   {n:'950/K18 5:5',   type:'normal',        base:'c950_55'},
-  {n:'950/K18 7:3',   type:'normal',        base:'c950_73'},
-  {n:'950/K18 9:1',   type:'normal',        base:'c950_91'},
-  {n:'900/K18 1:9',   type:'normal',        base:'c900_19'},
-  {n:'900/K18 3:7',   type:'normal',        base:'c900_37'},
+  {n:'950/K18 3:7',   type:'normal',        base:'c950_73'},
+  {n:'950/K18 1:9',   type:'normal',        base:'c950_91'},
+  {n:'900/K18 9:1',   type:'normal',        base:'c900_19'},
+  {n:'900/K18 7:3',   type:'normal',        base:'c900_37'},
   {n:'900/K18 5:5',   type:'normal',        base:'c900_55'},
-  {n:'900/K18 7:3',   type:'normal',        base:'c900_73'},
-  {n:'900/K18 9:1',   type:'normal',        base:'c900_91'},
-  {n:'850/K18 1:9',   type:'normal',        base:'c850_19'},
-  {n:'850/K18 3:7',   type:'normal',        base:'c850_37'},
+  {n:'900/K18 3:7',   type:'normal',        base:'c900_73'},
+  {n:'900/K18 1:9',   type:'normal',        base:'c900_91'},
+  {n:'850/K18 9:1',   type:'normal',        base:'c850_19'},
+  {n:'850/K18 7:3',   type:'normal',        base:'c850_37'},
   {n:'850/K18 5:5',   type:'normal',        base:'c850_55'},
-  {n:'850/K18 7:3',   type:'normal',        base:'c850_73'},
-  {n:'850/K18 9:1',   type:'normal',        base:'c850_91'},
+  {n:'850/K18 3:7',   type:'normal',        base:'c850_73'},
+  {n:'850/K18 1:9',   type:'normal',        base:'c850_91'},
   {n:'SV/K18',        type:'normal',        base:'sv_k18'},
   {n:'SV/K14',        type:'normal',        base:'sv_k14'},
   {n:'SV/K10',        type:'normal',        base:'sv_k10'}
@@ -525,8 +535,10 @@ function getNote(gradeName, weight) {
 }
 
 window.onload=function(){
+  document.getElementById('gk').value=localStorage.getItem('gk')||'';
   document.getElementById('ck').value=localStorage.getItem('ck')||'';
   document.getElementById('gu').value=localStorage.getItem('gu')||'';
+  setEng(eng);
   var s=localStorage.getItem('mkt');
   if(s){ mkt=JSON.parse(s); updateStatus(); }
   // 保存データ読込
@@ -545,8 +557,9 @@ window.onload=function(){
   if(allStRows[1].length===0){switchSt(1);for(var i=0;i<8;i++) addStRow();switchSt(0);}
   if(allStRows[2].length===0){switchSt(2);for(var i=0;i<8;i++) addStRow();switchSt(0);}
   renderTable();
-  // 今日の日付を表示
-  var tde=document.getElementById('todayDate'); if(tde) tde.textContent=todayStr();
+  // 本日の日付を表示
+  var tde=document.getElementById('todayDate');
+  if(tde) tde.textContent='今日 '+todayStr();
 };
 
 function showTab(id,el){
@@ -560,7 +573,8 @@ function showTab(id,el){
   if(id==='t5'){allStRows[curSt]=stRows;renderStampTable();}
 }
 
-function save(){ localStorage.setItem('ck',document.getElementById('ck').value.trim()); localStorage.setItem('gu',document.getElementById('gu').value.trim()); alert('保存しました'); }
+function setEng(e){ eng=e; localStorage.setItem('eng',e); document.getElementById('bg').className=e==='gemini'?'on':''; document.getElementById('bc').className=e==='claude'?'on':''; }
+function save(){ localStorage.setItem('gk',document.getElementById('gk').value.trim()); localStorage.setItem('ck',document.getElementById('ck').value.trim()); localStorage.setItem('gu',document.getElementById('gu').value.trim()); alert('保存しました'); }
 
 function updateStatus(){
   if(!mkt) return;
@@ -587,16 +601,23 @@ function ss(id,cls){ document.getElementById(id).className='step '+cls; }
 function getPrompt(){ return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10'; }
 
 async function doAnalyze(){
-  var key=localStorage.getItem('ck');
-  if(!key) return alert('Claude APIキーを設定してください（設定タブ）');
+  var key=localStorage.getItem(eng==='gemini'?'gk':'ck');
+  if(!key) return alert('APIキーを設定してください');
   if(!b64) return alert('画像を選択してください');
   document.getElementById('ab').disabled=true; document.getElementById('ab').textContent='解析中...';
   document.getElementById('st').classList.add('show'); document.getElementById('pv').style.display='none';
   ss('s1','go'); ss('s2',''); ss('s3','');
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
-    var d=await res.json(); if(!res.ok) throw new Error(d.error&&d.error.message||JSON.stringify(d.error));
-    var text=d.content[0].text;
+    var text;
+    if(eng==='gemini'){
+      var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:getPrompt()},{inline_data:{mime_type:mime,data:b64}}]}]})});
+      var d=await res.json(); if(!res.ok) throw new Error('Gemini: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      text=d.candidates[0].content.parts[0].text;
+    }else{
+      var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:getPrompt()}]}]})});
+      var d=await res.json(); if(!res.ok) throw new Error('Claude: '+(d.error&&d.error.message||JSON.stringify(d.error)));
+      text=d.content[0].text;
+    }
     ss('s1','ok'); ss('s2','go');
     var m=text.match(/\{[\s\S]*\}/); if(!m) throw new Error('JSONが見つかりません');
     mkt=JSON.parse(m[0]); localStorage.setItem('mkt',JSON.stringify(mkt));
@@ -742,7 +763,10 @@ function gradeOpts(sel){
     if(isGdb&&!gdbExpanded&&sel!==g.n) return;
     var p=getDisplayPrice(g);
     var label=g.n+(p?' '+p.toLocaleString():'');
-    h+='<option value="'+g.n+'"'+(sel===g.n?' selected':'')+'>'+label+'</option>';
+    var cStyle='';
+    if(/9:1|7:3/.test(g.n)) cStyle=' style="color:var(--mu)"';
+    else if(/3:7|1:9/.test(g.n)) cStyle=' style="color:#f97316"';
+    h+='<option value="'+g.n+'"'+(sel===g.n?' selected':'')+cStyle+'>'+label+'</option>';
   });
   return h;
 }
@@ -773,20 +797,20 @@ function renderTable(){
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
       '<td>'+
-        '<input list="'+dlId+'" data-key="'+r.id+'_type" value="'+(r.type||'')+'" placeholder="種類" oninput="upd('+r.id+',\'type\',this.value)" style="width:74px">'+
+        '<input list="'+dlId+'" value="'+(r.type||'')+'" placeholder="種類" onchange="upd('+r.id+',\'type\',this.value)" style="width:74px">'+
         '<datalist id="'+dlId+'">'+TYPES.map(function(t){return '<option value="'+t+'">';}).join('')+'</datalist>'+
       '</td>'+
       '<td>'+
         '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:98px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="number" step="0.1" min="0" max="999.9" inputmode="decimal" data-key="'+r.id+'_w" value="'+(r.w||'')+'" placeholder="0" oninput="upd('+r.id+',\'w\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" step="0.1" min="0" max="999.9" inputmode="decimal" data-key="'+r.id+'_ishi" value="'+(r.ishi||'')+'" placeholder="0" oninput="upd('+r.id+',\'ishi\',this.value)" style="width:48px"></td>'+
+      '<td><input type="text" inputmode="decimal" value="'+(r.w||'')+'" placeholder="0.0" oninput="updW(this,'+r.id+')" style="width:54px"></td>'+
+      '<td><input type="text" inputmode="decimal" value="'+(r.ishi||'')+'" placeholder="0.0" oninput="updI(this,'+r.id+')" style="width:48px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+r.id+'_saki" value="'+(r.saki||'')+'" placeholder="0" oninput="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
       '<td class="c-max" style="font-size:13px">'+c.max.toLocaleString()+'</td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+r.id+'_buy" value="'+(r.buy||'')+'" placeholder="0" oninput="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
+      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="upd('+r.id+',\'buy\',this.value)" style="width:60px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+c.profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delRow('+r.id+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -799,27 +823,25 @@ function renderTable(){
   var tC=rows.filter(function(r){return r.grade;}).length; var elC=document.getElementById('totalCount'); if(elC) elC.textContent=tC+'件';
 }
 
-// フォーカス・入力値を再描画をまたいで維持する
-function withFocusRestore(renderFn){
-  var ae=document.activeElement;
-  var key=ae&&ae.dataset?ae.dataset.key:null;
-  var rawVal=ae?ae.value:null;
-  renderFn();
-  if(!key) return;
-  var el=document.querySelector('[data-key="'+key+'"]');
-  if(!el) return;
-  el.focus();
-  // ユーザーが入力中の生文字列を復元（"1." → parseFloat後に"1"に戻るのを防ぐ）
-  if(rawVal!==null) el.value=rawVal;
+function updW(el,id){
+  el.value=el.value.replace(/[^0-9.]/g,'');
+  var dots=el.value.split('.').length-1;
+  if(dots>1) el.value=el.value.replace(/\.(?=.*\.)/g,'');
+  upd(id,'w',el.value);
 }
-
+function updI(el,id){
+  el.value=el.value.replace(/[^0-9.]/g,'');
+  var dots=el.value.split('.').length-1;
+  if(dots>1) el.value=el.value.replace(/\.(?=.*\.)/g,'');
+  upd(id,'ishi',el.value);
+}
 function upd(id,field,val){
   var r=rows.find(function(x){ return x.id===id; }); if(!r) return;
   if(field==='type') r.type=val;
   else if(field==='grade') r.grade=val;
   else r[field]=parseFloat(val)||0;
   allRows[curJkin]=rows;
-  withFocusRestore(renderTable);
+  renderTable();
   saveAllData();
 }
 
@@ -865,13 +887,13 @@ function renderKinkenTable(){
     var rid=r.id;
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
-      '<td><input type="text" data-key="'+rid+'_kname" value="'+(r.name||'')+'" placeholder="商品" oninput="updKk('+rid+',\'name\',this.value)" style="width:76px"></td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_kteika" value="'+(r.teika||'')+'" placeholder="0" oninput="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" min="0" max="100" step="0.1" inputmode="decimal" data-key="'+rid+'_kpct" value="'+(r.pct||'')+'" placeholder="0" oninput="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_ktanka" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" oninput="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
-      '<td><input type="number" min="1" max="9999" inputmode="numeric" data-key="'+rid+'_kqty" value="'+(r.qty||1)+'" placeholder="1" oninput="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
+      '<td><input type="text" value="'+(r.name||'')+'" placeholder="商品" onchange="updKk('+rid+',\'name\',this.value)" style="width:76px"></td>'+
+      '<td><input type="number" value="'+(r.teika||'')+'" placeholder="0" onchange="updKk('+rid+',\'teika\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" step="0.1" value="'+(r.pct||'')+'" placeholder="0" onchange="updKk('+rid+',\'pct\',this.value)" style="width:42px"></td>'+
+      '<td><input type="number" value="'+(r.tanka_override!=null?r.tanka_override:tanka)+'" placeholder="'+(tanka||0)+'" onchange="updKk('+rid+',\'tanka_override\',this.value)" style="width:50px"></td>'+
+      '<td><input type="number" value="'+(r.qty||1)+'" placeholder="1" onchange="updKk('+rid+',\'qty\',this.value)" style="width:38px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_kbuy" value="'+(r.buy||'')+'" placeholder="0" oninput="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
+      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="updKk('+rid+',\'buy\',this.value)" style="width:52px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delKkRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -889,7 +911,7 @@ function updKk(id,field,val){
   else if(field==='tanka_override') r.tanka_override=(val===''||val==='0'?null:parseFloat(val)||0);
   else r[field]=parseFloat(val)||0;
   allKkRows[curKk]=kkRows;
-  withFocusRestore(renderKinkenTable);
+  renderKinkenTable();
   saveAllData();
 }
 
@@ -936,12 +958,12 @@ function renderAucTable(){
     var tr=document.createElement('tr');
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
-      '<td><input type="text" data-key="'+rid+'_amemo" value="'+(r.memo||'')+'" placeholder="商品メモ" oninput="updAuc('+rid+',\'memo\',this.value)" style="width:92px"></td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_asaki" value="'+(r.saki||'')+'" placeholder="0" oninput="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_aori1" value="'+(r.oroshi1||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_aori2" value="'+(r.oroshi2||'')+'" placeholder="0" oninput="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
+      '<td><input type="text" value="'+(r.memo||'')+'" placeholder="商品メモ" onchange="updAuc('+rid+',\'memo\',this.value)" style="width:92px"></td>'+
+      '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="updAuc('+rid+',\'saki\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" value="'+(r.oroshi1||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi1\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" value="'+(r.oroshi2||'')+'" placeholder="0" onchange="updAuc('+rid+',\'oroshi2\',this.value)" style="width:54px"></td>'+
       '<td class="c-max">'+max.toLocaleString()+'</td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_abuy" value="'+(r.buy||'')+'" placeholder="0" oninput="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" value="'+(r.buy||'')+'" placeholder="0" onchange="updAuc('+rid+',\'buy\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delAucRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -959,7 +981,7 @@ function updAuc(id,field,val){
   if(field==='memo') r.memo=val;
   else r[field]=parseFloat(val)||0;
   allAucRows[curAuc]=aucRows;
-  withFocusRestore(renderAucTable);
+  renderAucTable();
   saveAllData();
 }
 
@@ -1182,12 +1204,12 @@ function renderStampTable(){
         STAMP_TYPES.map(function(t){return '<option value="'+t+'"'+(r.stype===t?' selected':'')+'>'+t+'</option>';}).join('')+
       '</select></td>'+
       '<td>'+(needKind?'<select onchange="updSt('+rid+',\'skind\',this.value)" style="min-width:120px">'+kindOpts(r.skind,r.stype)+'</select>':'<span style="color:var(--mu);font-size:11px">-</span>')+'</td>'+
-      '<td>'+(needTeimen?'<input type="number" min="0" max="9999" inputmode="numeric" data-key="'+rid+'_steimen" value="'+(r.teimen||'')+'" placeholder="0" oninput="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needMaisu?'<input type="number" min="1" max="9999" inputmode="numeric" data-key="'+rid+'_smaisu" value="'+(r.maisu||1)+'" placeholder="1" oninput="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
-      '<td>'+(needSheets?'<input type="number" min="1" max="9999" inputmode="numeric" data-key="'+rid+'_ssheets" value="'+(r.sheets||1)+'" placeholder="1" oninput="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
+      '<td>'+(needTeimen?'<input type="number" value="'+(r.teimen||'')+'" placeholder="0" onchange="updSt('+rid+',\'teimen\',this.value)" style="width:46px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needMaisu?'<input type="number" value="'+(r.maisu||1)+'" placeholder="1" onchange="updSt('+rid+',\'maisu\',this.value)" style="width:36px">':'<span style="color:var(--mu)">-</span>')+'</td>'+
+      '<td>'+(needSheets?'<input type="number" value="'+(r.sheets||1)+'" placeholder="1" onchange="updSt('+rid+',\'sheets\',this.value)" style="width:36px">':'-')+'</td>'+
       '<td style="font-size:11px;color:var(--mu)">'+rateDisp+'</td>'+
       '<td class="c-max">'+c.teimen.toLocaleString()+'</td>'+
-      '<td><input type="number" min="0" max="99999999" inputmode="numeric" data-key="'+rid+'_sbuy" value="'+(r.buy_actual||'')+'" placeholder="0" oninput="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
+      '<td><input type="number" value="'+(r.buy_actual||'')+'" placeholder="0" onchange="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
       '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delStRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
@@ -1219,7 +1241,7 @@ function updSt(id,field,val){
   else if(field==='skind') r.skind=val;
   else r[field]=parseFloat(val)||0;
   allStRows[curSt]=stRows;
-  withFocusRestore(renderStampTable);
+  renderStampTable();
   saveAllData();
 }
 
