@@ -791,6 +791,7 @@ function renderTable(){
     var c=calcRow(r);
     tMax+=c.max; tBuy+=r.buy||0; tProfit+=c.profit;
     var tr=document.createElement('tr');
+    tr.id='row_'+r.id;
     var pStyle=c.profit<0?' style="color:var(--rd)"':'';
     // datalist id per row
     var dlId='dl_'+r.id;
@@ -804,8 +805,8 @@ function renderTable(){
         '<select data-rid="'+r.id+'" onchange="upd('+r.id+',\'grade\',this.value)" style="min-width:98px">'+gradeOpts(r.grade)+'</select>'+
         (c.note?'<div class="c-note">'+c.note+'</div>':'')+
       '</td>'+
-      '<td><input type="text" inputmode="decimal" value="'+(r.w||'')+'" placeholder="0.0" oninput="updW(this,'+r.id+')" style="width:54px"></td>'+
-      '<td><input type="text" inputmode="decimal" value="'+(r.ishi||'')+'" placeholder="0.0" oninput="updI(this,'+r.id+')" style="width:48px"></td>'+
+      '<td><input type="text" inputmode="decimal" placeholder="0.0" oninput="updW(this,'+r.id+')" onblur="renderTable()" style="width:54px"></td>'+
+      '<td><input type="text" inputmode="decimal" placeholder="0.0" oninput="updI(this,'+r.id+')" onblur="renderTable()" style="width:48px"></td>'+
       '<td class="c-jk">'+c.jk.toFixed(1)+'g</td>'+
       '<td class="c-max">'+c.jmax.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.saki||'')+'" placeholder="0" onchange="upd('+r.id+',\'saki\',this.value)" style="width:60px"></td>'+
@@ -814,6 +815,8 @@ function renderTable(){
       '<td class="c-profit"'+pStyle+'>'+c.profit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delRow('+r.id+')">✕</button></td>';
     tbody.appendChild(tr);
+    tr.cells[3].querySelector('input').value=r.w||'';
+    tr.cells[4].querySelector('input').value=r.ishi||'';
   });
   document.getElementById('totalMax').textContent='¥'+tMax.toLocaleString();
   document.getElementById('totalBuy').textContent='¥'+tBuy.toLocaleString();
@@ -827,13 +830,44 @@ function updW(el,id){
   el.value=el.value.replace(/[^0-9.]/g,'');
   var dots=el.value.split('.').length-1;
   if(dots>1) el.value=el.value.replace(/\.(?=.*\.)/g,'');
-  upd(id,'w',el.value);
+  var r=rows.find(function(x){return x.id===id;}); if(!r) return;
+  r.w=parseFloat(el.value)||0;
+  allRows[curJkin]=rows;
+  updCalcOnly(id);
+  saveAllData();
 }
 function updI(el,id){
   el.value=el.value.replace(/[^0-9.]/g,'');
   var dots=el.value.split('.').length-1;
   if(dots>1) el.value=el.value.replace(/\.(?=.*\.)/g,'');
-  upd(id,'ishi',el.value);
+  var r=rows.find(function(x){return x.id===id;}); if(!r) return;
+  r.ishi=parseFloat(el.value)||0;
+  allRows[curJkin]=rows;
+  updCalcOnly(id);
+  saveAllData();
+}
+function updCalcOnly(id){
+  var r=rows.find(function(x){return x.id===id;}); if(!r) return;
+  var c=calcRow(r);
+  var tr=document.getElementById('row_'+id); if(!tr) return;
+  tr.cells[5].textContent=c.jk.toFixed(1)+'g';
+  tr.cells[6].textContent=c.jmax.toLocaleString();
+  tr.cells[8].textContent=c.max.toLocaleString();
+  tr.cells[10].textContent=c.profit.toLocaleString();
+  tr.cells[10].style.color=c.profit<0?'var(--rd)':'';
+  var noteEl=tr.cells[2].querySelector('.c-note');
+  if(c.note){
+    if(noteEl) noteEl.textContent=c.note;
+    else{var d=document.createElement('div');d.className='c-note';d.textContent=c.note;tr.cells[2].appendChild(d);}
+  } else {
+    if(noteEl) noteEl.remove();
+  }
+  var tMax=0,tBuy=0,tProfit=0,tW=0;
+  rows.forEach(function(row){var rc=calcRow(row);tMax+=rc.max;tBuy+=row.buy||0;tProfit+=rc.profit;tW+=row.w||0;});
+  document.getElementById('totalMax').textContent='¥'+tMax.toLocaleString();
+  document.getElementById('totalBuy').textContent='¥'+tBuy.toLocaleString();
+  document.getElementById('totalProfit').textContent='¥'+tProfit.toLocaleString();
+  var el=document.getElementById('totalWeight'); if(el) el.textContent=tW.toFixed(1)+'g';
 }
 function upd(id,field,val){
   var r=rows.find(function(x){ return x.id===id; }); if(!r) return;
