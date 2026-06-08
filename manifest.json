@@ -1,7 +1,7 @@
 {
-  "name": "相場 PRO",
-  "short_name": "相場PRO",
-  "description": "貴金属・金券・切手の相場管理アプリ",
+  "name": "査定 PRO",
+  "short_name": "査定PRO",
+  "description": "貴金属・金券・切手の査定管理アプリ",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
