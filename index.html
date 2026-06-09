@@ -183,9 +183,9 @@ td input[type=number]{font-family:'DM Mono',monospace;}
   </div>
   <button class="btn btn-gold" id="ab" onclick="doAnalyze()" disabled>📊 画像を読み取る</button>
   <div class="steps" id="st">
-    <div class="step" id="s1">🔍 AI解析中...</div>
-    <div class="step" id="s2">📋 数値抽出中...</div>
-    <div class="step" id="s3">📤 シート書込中...</div>
+    <div class="step" id="s1"></div>
+    <div class="step" id="s2"></div>
+    <div class="step" id="s3"></div>
   </div>
   <div id="pv" style="display:none">
     <div class="card"><h3>金スクラップ <span id="pdate" style="color:var(--gold)"></span></h3><div class="pg_grid" id="pg_g"></div></div>
@@ -591,7 +591,17 @@ function onFile(e){
   r.readAsDataURL(f);
 }
 
-function ss(id,cls){ document.getElementById(id).className='step '+cls; }
+var STEP_TEXT={
+  s1:{go:'🔍 画像をAIで解析中...',ok:'✅ 画像の解析が完了しました',ng:'❌ 画像の解析に失敗しました'},
+  s2:{go:'📋 相場数値を抽出中...',ok:'✅ 相場データの取得が完了しました',ng:'❌ 数値の抽出に失敗しました'},
+  s3:{go:'📤 Googleシートに書き込み中...',ok:'✅ シートへの書き込みが完了しました',ng:'❌ シートへの書き込みに失敗しました'}
+};
+function ss(id,cls){
+  var el=document.getElementById(id);
+  el.className='step '+cls;
+  var t=STEP_TEXT[id];
+  el.textContent=(t&&cls&&t[cls])?t[cls]:'';
+}
 function getPrompt(){ return 'この相場表画像から数値をJSONで抽出。不明はnull、数値は整数、JSONのみ返す。キー: date(M/D), gold_spot, k24, k23, k22, k216, k20, k18, k14, k10, k9, k8, k5, kiba, pt_ig, pt1000, pt950, pt900, pt850, sv_ig, sv1000, sv925, sv, pd, c950_19, c950_37, c950_55, c950_73, c950_91, c900_19, c900_37, c900_55, c900_73, c900_91, c850_19, c850_37, c850_55, c850_73, c850_91, sv_k18, sv_k14, sv_k10'; }
 
 async function doAnalyze(){
