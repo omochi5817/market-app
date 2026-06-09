@@ -198,13 +198,13 @@ td input[type=number]{font-family:'DM Mono',monospace;}
 
 <div class="pg" id="t2">
   <div class="sbar"><div class="sdot" id="sd2"></div><span id="st2">相場未取得</span></div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:6px">
-    <div style="display:flex;gap:4px">
-      <button onclick="switchJkin(0)" id="jkTab0" class="subtab  on">①</button>
-      <button onclick="switchJkin(1)" id="jkTab1" class="subtab">②</button>
-      <button onclick="switchJkin(2)" id="jkTab2" class="subtab">③</button>
-    </div>
-    <button onclick="toggleGdb()" class="subtab" id="gdbBtn">GDB ▼</button>
+  <div style="display:flex;gap:5px;margin-bottom:6px">
+    <button onclick="switchJkin(0)" id="jkTab0" class="subtab  on">①</button>
+    <button onclick="switchJkin(1)" id="jkTab1" class="subtab">②</button>
+    <button onclick="switchJkin(2)" id="jkTab2" class="subtab">③</button>
+  </div>
+  <div style="text-align:right;margin-bottom:10px">
+    <button onclick="toggleGdb()" class="subtab" id="gdbBtn" style="flex:none">GDB・喜平 ▼</button>
   </div>
   <div class="total-bar" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
     <div class="tb-item"><div class="tl">品目数</div><div class="tv" style="color:var(--mu)" id="totalCount">0</div></div>
@@ -735,7 +735,7 @@ var gdbExpanded=false;
 function toggleGdb(){
   gdbExpanded=!gdbExpanded;
   var btn=document.getElementById('gdbBtn');
-  if(btn) btn.textContent=gdbExpanded?'GDB品目を折りたたむ ▲':'GDB品目を展開 ▼';
+  if(btn) btn.textContent=gdbExpanded?'GDB・喜平 ▲':'GDB・喜平 ▼';
   rows.forEach(function(r){
     var sel=document.querySelector('select[data-rid="'+r.id+'"]');
     if(sel) sel.innerHTML=gradeOpts(r.grade);
@@ -753,7 +753,7 @@ function gradeOpts(sel){
       return;
     }
     // GDB品目は折りたたみ時は非表示（ただし現在選択中なら表示）
-    var isGdb=(g.type==='gdb');
+    var isGdb=(g.type==='gdb'||g.type==='kihei');
     if(isGdb&&!gdbExpanded&&sel!==g.n) return;
     var p=getDisplayPrice(g);
     var label=g.n+(p?' '+p.toLocaleString():'');
