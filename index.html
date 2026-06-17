@@ -312,24 +312,28 @@ td input[type=number]{font-family:'DM Mono',monospace;}
     <button onclick="switchSt(2)" id="stTab2" class="subtab">③</button>
   </div>
   <div class="stamp-total">
-    <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
-      <div class="st-item"><div class="stl">シート</div><div class="stv" id="stSheet">¥0</div></div>
-      <div class="st-item"><div class="stl">バラ</div><div class="stv" id="stBara">¥0</div></div>
-      <div class="st-item"><div class="stl">はがき</div><div class="stv" id="stHagaki">¥0</div></div>
-      <div class="st-item"><div class="stl">混合</div><div class="stv" id="stMix">¥0</div></div>
-      <div class="st-item"><div class="stl">その他</div><div class="stv" id="stOther">¥0</div></div>
+    <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <div class="st-item"><div class="stl" style="color:#d4b254">シート額面</div><div class="stv" id="stSheetTeimen">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#d4b254">バラ額面</div><div class="stv" id="stBaraTeimen">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#d4b254">はがき額面</div><div class="stv" id="stHagakiTeimen">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#d4b254">その他額面</div><div class="stv" id="stOtherTeimen">¥0</div></div>
     </div>
-    <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
-      <div class="st-item"><div class="stl">シート買取</div><div class="stv tv-buy" id="stSheetBuy">¥0</div></div>
-      <div class="st-item"><div class="stl">バラ買取</div><div class="stv tv-buy" id="stBaraBuy">¥0</div></div>
-      <div class="st-item"><div class="stl">はがき買取</div><div class="stv tv-buy" id="stHagakiBuy">¥0</div></div>
-      <div class="st-item"><div class="stl">その他買取</div><div class="stv tv-buy" id="stOtherBuy">¥0</div></div>
-      <div class="st-item"><div class="stl">合計買取</div><div class="stv tv-max" id="stTotalBuy">¥0</div></div>
+    <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <div class="st-item"><div class="stl" style="color:#10b981">シート買取</div><div class="stv tv-buy" id="stSheetBuy2">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#10b981">バラ買取</div><div class="stv tv-buy" id="stBaraBuy2">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#10b981">はがき買取</div><div class="stv tv-buy" id="stHagakiBuy2">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#10b981">その他買取</div><div class="stv tv-buy" id="stOtherBuy2">¥0</div></div>
+    </div>
+    <div class="st-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <div class="st-item"><div class="stl" style="color:#a8b8c8">シート粗利</div><div class="stv tv-profit" id="stSheetProfit">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#a8b8c8">バラ粗利</div><div class="stv tv-profit" id="stBaraProfit">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#a8b8c8">はがき粗利</div><div class="stv tv-profit" id="stHagakiProfit">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#a8b8c8">その他粗利</div><div class="stv tv-profit" id="stOtherProfit">¥0</div></div>
     </div>
     <div class="st-row" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="st-item"><div class="stl">合計MAX</div><div class="stv tv-max" id="stTotalMax">¥0</div></div>
-      <div class="st-item"><div class="stl">合計買取入力</div><div class="stv tv-buy" id="stTotalActual">¥0</div></div>
-      <div class="st-item"><div class="stl">粗利</div><div class="stv tv-profit" id="stTotalProfit">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#d4b254;font-weight:700">全額面</div><div class="stv tv-max" id="stGrandTeimen">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#10b981;font-weight:700">全買取</div><div class="stv tv-buy" id="stGrandBuy">¥0</div></div>
+      <div class="st-item"><div class="stl" style="color:#a8b8c8;font-weight:700">全粗利</div><div class="stv tv-profit" id="stGrandProfit">¥0</div></div>
     </div>
   </div>
   <div class="tbl-wrap">
@@ -339,13 +343,13 @@ td input[type=number]{font-family:'DM Mono',monospace;}
           <th>#</th>
           <th style="min-width:66px">種類</th>
           <th style="min-width:120px">切手種別</th>
-          <th style="min-width:46px">額面</th>
+          <th style="min-width:46px">額面(枚)</th>
           <th style="min-width:36px">枚数</th>
           <th style="min-width:36px">束数</th>
-          <th style="min-width:46px">単価</th>
-          <th style="min-width:58px">MAX</th>
+          <th style="min-width:46px">レート</th>
+          <th style="min-width:58px">額面(合計)</th>
           <th style="min-width:54px">買取</th>
-          <th style="min-width:52px">粗利</th>
+          <th style="min-width:52px">MAX</th>
           <th></th>
         </tr>
       </thead>
@@ -1139,38 +1143,37 @@ function calcSt(r){
     var mx=MIX_SETS.find(function(x){return x.n===r.skind;});
     var price=mx?mx.price:0;
     var sheets=r.sheets||1;
-    return {teimen:price*sheets, buy:price*sheets, rate:-1, unitDisp:price+'円'};
+    var rateMax=price*sheets;
+    return {teimen:rateMax, buy:rateMax, rate:-1, unitDisp:price+'円', rateMax:rateMax};
   }
   if(r.stype==='はがき'){
     var hk=HAGAKI_KINDS.find(function(x){return x.n===r.skind;});
     var unit=hk?hk.unit:0;
     var qty=(r.maisu||1)*(r.sheets||1);
     var buy=unit*qty;
-    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円/枚'};
+    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円/枚', rateMax:buy};
   }
   if(r.stype==='レターパック'){
     var lk=LETTER_KINDS.find(function(x){return x.n===r.skind;});
     var unit=lk?lk.unit:0;
     var qty=(r.maisu||1)*(r.sheets||1);
     var buy=unit*qty;
-    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円'};
+    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円', rateMax:buy};
   }
   if(r.stype==='スマートレター'){
     var sk=SMART_KINDS.find(function(x){return x.n===r.skind;});
     var unit=sk?sk.unit:0;
     var qty=(r.maisu||1)*(r.sheets||1);
     var buy=unit*qty;
-    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円'};
+    return {teimen:buy, buy:buy, rate:-2, unitDisp:unit+'円', rateMax:buy};
   }
   var rate=getStRate(r);
-  if(rate===0) return {teimen:0, buy:0, rate:0, unitDisp:'買不可'};
-  // シートの場合、unit>0なら額面自動、0なら手入力
+  if(rate===0) return {teimen:0, buy:0, rate:0, unitDisp:'買不可', rateMax:0};
   var k=r.stype==='シート'?SHEET_KINDS.find(function(x){return x.n===r.skind;}):null;
   var teimenPerSheet=k&&k.unit>0?k.unit*(r.maisu||1):(r.teimen||0)*(r.maisu||1);
   var teimen=teimenPerSheet*(r.sheets||1);
-  var buy=Math.floor(teimen*rate/100);
-  var autoDisp=k&&k.unit>0?(k.unit+'円×'+rate+'%'):(rate+'%');
-  return {teimen:teimen, buy:buy, rate:rate, unitDisp:autoDisp, autoUnit:(k&&k.unit>0)};
+  var rateMax=Math.floor(teimen*rate/100);
+  return {teimen:teimen, buy:rateMax, rate:rate, unitDisp:rate+'%', rateMax:rateMax, autoUnit:(k&&k.unit>0)};
 }
 
 function kindOpts(sel, stype){
@@ -1216,14 +1219,15 @@ function renderStampTable(){
   var tbody=document.getElementById('stBody');
   if(!tbody) return;
   tbody.innerHTML='';
-  var totSheet={teimen:0,buy:0}, totBara={teimen:0,buy:0}, totHagaki={teimen:0,buy:0}, totMix={teimen:0,buy:0}, totOther={teimen:0,buy:0};
+  var totSheet={teimen:0,buy:0,profit:0}, totBara={teimen:0,buy:0,profit:0}, totHagaki={teimen:0,buy:0,profit:0}, totOther={teimen:0,buy:0,profit:0};
   stRows.forEach(function(r,i){
     var c=calcSt(r);
-    if(r.stype==='シート'){totSheet.teimen+=c.teimen;totSheet.buy+=c.buy;}
-    else if(r.stype==='バラ'){totBara.teimen+=c.teimen;totBara.buy+=c.buy;}
-    else if(r.stype==='はがき'){totHagaki.teimen+=c.teimen;totHagaki.buy+=c.buy;}
-    else if(r.stype==='混合セット'){totMix.teimen+=c.teimen;totMix.buy+=c.buy;}
-    else if(r.stype==='レターパック'||r.stype==='スマートレター'){totOther.teimen+=c.teimen;totOther.buy+=c.buy;}
+    var ba=r.buy_actual||0;
+    var rowProfit=c.rateMax-ba;
+    if(r.stype==='シート'||r.stype==='混合セット'){totSheet.teimen+=c.teimen;totSheet.buy+=ba;totSheet.profit+=rowProfit;}
+    else if(r.stype==='バラ'){totBara.teimen+=c.teimen;totBara.buy+=ba;totBara.profit+=rowProfit;}
+    else if(r.stype==='はがき'){totHagaki.teimen+=c.teimen;totHagaki.buy+=ba;totHagaki.profit+=rowProfit;}
+    else if(r.stype==='レターパック'||r.stype==='スマートレター'){totOther.teimen+=c.teimen;totOther.buy+=ba;totOther.profit+=rowProfit;}
     var rid=r.id;
     var needKind=(r.stype==='シート'||r.stype==='混合セット'||r.stype==='はがき'||r.stype==='レターパック'||r.stype==='スマートレター');
     var sheetKind=r.stype==='シート'?SHEET_KINDS.find(function(x){return x.n===r.skind;}):null;
@@ -1232,8 +1236,7 @@ function renderStampTable(){
     var needSheets=(r.stype==='シート'||r.stype==='混合セット'||r.stype==='バラ'||r.stype==='はがき'||r.stype==='レターパック'||r.stype==='スマートレター');
     var needMaisu=(r.stype!=='混合セット');
     var rateDisp=c.unitDisp||'';
-    var profit=c.buy-(r.buy_actual||0);
-    var pStyle=profit<0?' style="color:var(--rd)"':'';
+    var pStyle=rowProfit<0?' style="color:var(--rd)"':'';
     var tr=document.createElement('tr');
     tr.innerHTML=
       '<td>'+(i+1)+'</td>'+
@@ -1248,28 +1251,30 @@ function renderStampTable(){
       '<td style="font-size:11px;color:var(--mu)">'+rateDisp+'</td>'+
       '<td class="c-max">'+c.teimen.toLocaleString()+'</td>'+
       '<td><input type="number" value="'+(r.buy_actual||'')+'" placeholder="0" onchange="updSt('+rid+',\'buy_actual\',this.value)" style="width:54px"></td>'+
-      '<td class="c-profit"'+pStyle+'>'+profit.toLocaleString()+'</td>'+
+      '<td class="c-profit"'+pStyle+'>'+rowProfit.toLocaleString()+'</td>'+
       '<td><button class="del-btn" onclick="delStRow('+rid+')">✕</button></td>';
     tbody.appendChild(tr);
   });
-  var tBuy=totSheet.buy+totBara.buy+totHagaki.buy+totMix.buy+totOther.buy;
-  var el;
-  el=document.getElementById('stSheet'); if(el) el.textContent='¥'+totSheet.teimen.toLocaleString();
-  el=document.getElementById('stBara'); if(el) el.textContent='¥'+totBara.teimen.toLocaleString();
-  el=document.getElementById('stHagaki'); if(el) el.textContent='¥'+totHagaki.teimen.toLocaleString();
-  el=document.getElementById('stMix'); if(el) el.textContent='¥'+totMix.teimen.toLocaleString();
-  el=document.getElementById('stOther'); if(el) el.textContent='¥'+totOther.teimen.toLocaleString();
-  el=document.getElementById('stSheetBuy'); if(el) el.textContent='¥'+totSheet.buy.toLocaleString();
-  el=document.getElementById('stBaraBuy'); if(el) el.textContent='¥'+totBara.buy.toLocaleString();
-  el=document.getElementById('stHagakiBuy'); if(el) el.textContent='¥'+totHagaki.buy.toLocaleString();
-  el=document.getElementById('stOtherBuy'); if(el) el.textContent='¥'+totOther.buy.toLocaleString();
-  el=document.getElementById('stTotalBuy'); if(el) el.textContent='¥'+tBuy.toLocaleString();
-  var tMax=totSheet.teimen+totBara.teimen+totHagaki.teimen+totMix.teimen+totOther.teimen;
-  var tActual=stRows.reduce(function(s,r){return s+(r.buy_actual||0);},0);
-  var tProfit=tMax-tActual;
-  el=document.getElementById('stTotalMax'); if(el) el.textContent='¥'+tMax.toLocaleString();
-  el=document.getElementById('stTotalActual'); if(el) el.textContent='¥'+tActual.toLocaleString();
-  var elP=document.getElementById('stTotalProfit'); if(elP){elP.textContent='¥'+tProfit.toLocaleString();elP.style.color=tProfit<0?'var(--rd)':'var(--pt)';}
+  function up(id,v){var e=document.getElementById(id);if(e)e.textContent='¥'+v.toLocaleString();}
+  up('stSheetTeimen',totSheet.teimen);
+  up('stBaraTeimen',totBara.teimen);
+  up('stHagakiTeimen',totHagaki.teimen);
+  up('stOtherTeimen',totOther.teimen);
+  up('stSheetBuy2',totSheet.buy);
+  up('stBaraBuy2',totBara.buy);
+  up('stHagakiBuy2',totHagaki.buy);
+  up('stOtherBuy2',totOther.buy);
+  up('stSheetProfit',totSheet.profit);
+  up('stBaraProfit',totBara.profit);
+  up('stHagakiProfit',totHagaki.profit);
+  up('stOtherProfit',totOther.profit);
+  var grandTeimen=totSheet.teimen+totBara.teimen+totHagaki.teimen+totOther.teimen;
+  var grandBuy=totSheet.buy+totBara.buy+totHagaki.buy+totOther.buy;
+  var grandProfit=totSheet.profit+totBara.profit+totHagaki.profit+totOther.profit;
+  up('stGrandTeimen',grandTeimen);
+  up('stGrandBuy',grandBuy);
+  var elP=document.getElementById('stGrandProfit');
+  if(elP){elP.textContent='¥'+grandProfit.toLocaleString();elP.style.color=grandProfit<0?'var(--rd)':'';}
 }
 
 function updSt(id,field,val){
